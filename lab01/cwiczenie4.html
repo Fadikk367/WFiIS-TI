@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      width: 1024px;
+      margin: auto;
+      font-size: 1.1em;
+    }
+
+    nav {
+      background-color: rgb(78, 78, 78);
+      width: 100%;
+      margin: 0;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    nav ul {
+      display: flex;
+      width: 40%;
+      justify-content: space-around;
+      list-style-type: none;
+    }
+
+    nav ul li a {
+      padding: 10px 20px;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 1.2em;
+      color: white;
+    }
+
+    main {
+      padding: 40px;
+    }
+
+    main section {
+      margin-top: 20px;
+      background-color: rgb(195, 169, 169);
+    }
+
+    section:nth-child(1) {
+      background-color: yellow;
+    }
+
+    section:nth-child(2) {
+      background-color: red;
+    }
+
+    section:nth-child(3) {
+      background-color: blue;
+    }
+
+    footer {
+      padding: 40px;
+      text-align: center;
+      background-color: lime;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Zadanie 4, Wewnętrzna nawigacja</h1>
+  </header>
+  <nav>
+    <ul>
+      <li><a href="#home">home</a></li>
+      <li><a href="#services">services</a></li>
+      <li><a href="#realizations">realizations</a></li>
+    </ul>
+  </nav>
+  <main>
+    <section id="home">
+      <h2>Home</h2>
+      <article>
+        <h3>home 1</h3>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus unde ratione voluptatem consequuntur nam autem officiis, quibusdam amet culpa eligendi voluptatum voluptas nihil quasi doloremque inventore eaque distinctio sequi modi?</p>
+      </article>
+      <article>
+        <h3>home 2</h3>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus unde ratione voluptatem consequuntur nam autem officiis, quibusdam amet culpa eligendi voluptatum voluptas nihil quasi doloremque inventore eaque distinctio sequi modi?</p>
+      </article>
+    </section>
+    <section id="services">
+      <h2>Services</h2>
+      <article>
+        <h3>Services 1</h3>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus unde ratione voluptatem consequuntur nam autem officiis, quibusdam amet culpa eligendi voluptatum voluptas nihil quasi doloremque inventore eaque distinctio sequi modi?</p>
+      </article>
+      <article>
+        <h3>Services 2</h3>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus unde ratione voluptatem consequuntur nam autem officiis, quibusdam amet culpa eligendi voluptatum voluptas nihil quasi doloremque inventore eaque distinctio sequi modi?</p>
+      </article>
+      <article>
+        <h3>Services 3</h3>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus unde ratione voluptatem consequuntur nam autem officiis, quibusdam amet culpa eligendi voluptatum voluptas nihil quasi doloremque inventore eaque distinctio sequi modi?</p>
+      </article>
+    </section>
+    <section id="realizations">
+      <h2>Realizations</h2>
+      <article>
+        <h3>Realizations 1</h3>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus unde ratione voluptatem consequuntur nam autem officiis, quibusdam amet culpa eligendi voluptatum voluptas nihil quasi doloremque inventore eaque distinctio sequi modi?</p>
+      </article>
+      <article>
+        <h3>Realizations 2</h3>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus unde ratione voluptatem consequuntur nam autem officiis, quibusdam amet culpa eligendi voluptatum voluptas nihil quasi doloremque inventore eaque distinctio sequi modi?</p>
+      </article>
+      <article>
+        <h3>Realizations 3</h3>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus unde ratione voluptatem consequuntur nam autem officiis, quibusdam amet culpa eligendi voluptatum voluptas nihil quasi doloremque inventore eaque distinctio sequi modi?</p>
+      </article>
+      <article>
+        <h3>Realizations 4</h3>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus unde ratione voluptatem consequuntur nam autem officiis, quibusdam amet culpa eligendi voluptatum voluptas nihil quasi doloremque inventore eaque distinctio sequi modi?</p>
+      </article>
+    </section>
+  </main>
+  <footer>
+    Footer
+  </footer>
+</body>
+</html>
