@@ -1,0 +1,132 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+
+}
+
+header {
+  background-color: rgb(39, 39, 39);
+  color: rgb(170, 211, 123);
+}
+
+header h1 {
+  width: 1024px;
+  font-size: 2em;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+main {
+  width: 1024px;
+  margin: 0 auto;
+  padding: 0 20px;
+  -webkit-box-shadow: 0px 0px 30px -7px rgba(99,99,99,1);
+  -moz-box-shadow: 0px 0px 30px -7px rgba(99,99,99,1);
+  box-shadow: 0px 0px 30px -7px rgba(99,99,99,1);
+}
+
+nav {
+  padding: 20px 40px;
+}
+
+nav ul {
+  list-style-position: inside;
+  font-size: 1.2em;
+}
+
+nav h3 {
+  font-size: 1.4em;
+  padding: 7px 0px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgb(39, 39, 39);
+}
+
+nav ul li {
+  padding: 5px 7px;
+  border-radius: 3px;
+  transition: all 0.2s ease-in;
+}
+
+nav ul li:hover {
+  background-color: rgb(204, 204, 204);
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: black;
+  transition: all 0.3s ease-in-out;
+}
+
+nav ul li a:hover {
+  text-decoration: underline;
+}
+
+
+
+h2 {
+  font-size: 1.7em;
+  padding: 10px 15px;
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+  border-bottom: 4px solid rgb(39, 39, 39);
+  background-color: rgb(226, 176, 94);
+}
+
+article {
+  padding: 40px;
+}
+
+article:not(:last-child) {
+  border-bottom: 2px solid rgb(39, 39, 39);
+  padding-bottom: 60px;
+}
+
+p {
+  margin: 40px 0;
+  font-size: 1.2em;
+  text-align: justify;
+}
+
+pre {
+  padding: 20px;
+  font-size: 1.3em;
+  background-color: rgb(39, 39, 39);
+  color: rgb(170, 211, 123);
+  border: 1px solid black;
+  border-radius: 15px;
+}
+
+footer {
+  padding: 30px;
+  font-size: 1.3em;
+  font-weight: 600;
+  color: rgb(170, 211, 123);
+  text-align: center;
+  background-color: rgb(39, 39, 39);
+}
+
+@media only screen and (max-width: 1024px) {
+  main {
+    width: 100%;
+    padding: 10px;
+  }
+
+  header h1 {
+    width: 100%;
+    margin: none;
+    text-align: center;
+  }
+
+  pre {
+    overflow-x: scroll;
+  }
+}

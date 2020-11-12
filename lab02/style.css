@@ -1,0 +1,86 @@
+/* * {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+} */
+
+page, title, header, subtitle, footer, main, list, topic, exercise {
+  display: block;
+}
+
+page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 1200px;
+  position: relative;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+header {
+  background-color:#122e53; 
+}
+
+header title {
+  font-size: 2em;
+  color: white;
+  letter-spacing: 2px;
+  margin: 40px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid white;
+}
+
+header subtitle {
+  font-size: 1.7em;
+  margin: 0 40px 40px 40px;
+  color: white;
+}
+
+main {
+  flex-grow: 1;
+  background-color: rgb(189, 220, 255);
+}
+
+list {
+  max-width: 800px;
+  margin: 20px;
+}
+
+laboratory {
+  display: block;
+  padding-bottom: 20px;
+}
+
+topic {
+  font-size: 1.4em;
+  margin: 0;
+  padding: 20px;
+  background-color: rgb(135, 178, 228);
+  border-bottom: 3px solid #122e53; 
+}
+
+exercise {
+  padding: 10px;
+  font-size: 1.1em;
+  border-bottom: 1px solid #122e53; 
+}
+
+exercise:nth-child(odd) {
+  padding: 10px;
+  background-color: rgb(171, 208, 250);
+}
+
+exercise:hover {
+  background-color: rgb(135, 178, 228);
+  cursor: pointer;
+}
+
+footer {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.3em;
+  color: white;
+  background-color:#122e53; 
+}

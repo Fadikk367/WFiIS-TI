@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet type="text/css" href="./style.css" ?>
+<page>
+  <header>
+    <title>TECHNIKI INTERNETOWE - 2020 (XML Version)</title>
+    <subtitle>Adrian Furman</subtitle>
+  </header>
+  <main>
+    <list>
+      <laboratory>
+        <topic>1. Język HTML5, arkusze styli CSS</topic>
+        <exercise>ćwiczenie 1</exercise>
+        <exercise>ćwiczenie 2</exercise>
+        <exercise>ćwiczenie 3</exercise>
+        <exercise>ćwiczenie 4</exercise>
+        <exercise>ćwiczenie 5</exercise>
+      </laboratory>
+      <laboratory>
+        <topic>2. Język XML</topic>
+        <exercise>ćwiczenie 1</exercise>
+        <exercise>ćwiczenie 2</exercise>
+      </laboratory>
+      <laboratory>
+        <topic>3. PaaS - technologia IBM Cloud</topic>
+        <exercise>ćwiczenie 1</exercise>
+        <exercise>ćwiczenie 2</exercise>
+        <exercise>ćwiczenie 3</exercise>
+      </laboratory>
+      <laboratory>
+        <topic>4. Transformacja XSLT</topic>
+        <exercise>ćwiczenie 1</exercise>
+        <exercise>ćwiczenie 2</exercise>
+        <exercise>ćwiczenie 3</exercise>
+      </laboratory>
+      <laboratory>
+        <topic>5. Formularze i autoryzacja stron, cookie i sesje</topic>
+        <exercise>ćwiczenie 1</exercise>
+        <exercise>ćwiczenie 2</exercise>
+      </laboratory>
+      <laboratory>
+        <topic>6. Serwer WWW, protokół HTTP</topic>
+        <exercise>ćwiczenie 1</exercise>
+        <exercise>ćwiczenie 2</exercise>
+        <exercise>ćwiczenie 3</exercise>
+        <exercise>ćwiczenie 4</exercise>
+      </laboratory>
+      <laboratory>
+        <topic>7. Technologia AJAX, styl RESTful</topic>
+        <exercise>ćwiczenie 1</exercise>
+      </laboratory>
+      <laboratory>
+        <topic>8. Język PHP, szablony</topic>
+      </laboratory>
+      <laboratory>
+        <topic>9. WebService i protokół SOAP</topic>
+      </laboratory>
+      <laboratory>
+        <topic>10. Bazy danych w serwisach WWW - RBD i NoSQL</topic>
+      </laboratory>
+      <laboratory>
+        <topic>11. Serwisy WWW w chmurach obliczeniowych - IBM Cloud, Microsoft Azure</topic>
+      </laboratory>
+    </list>
+  </main>
+  <footer>
+    WFIIS - Techniki Internetowe 2020 - Adrian Furman
+  </footer>
+</page>
