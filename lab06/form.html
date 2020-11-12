@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./form.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main>
+    <fieldset>
+      <legend>Nie czekaj, <br />zapisz się już teraz!</legend>
+      <form action="" name="registrationForm">
+        <label for="name">Imię:</label>
+        <input type="text" name="name" id="name">
+        <label for="surname">Nazwisko:</label>
+        <input type="text" name="surname" id="surname">
+        <label for="email">Email:</label>
+        <input type="text" name="email" id="email">
+        <label for="year">Rok studiów:</label>
+        <select name="year" id="year">
+          <option value="1">I</option>
+          <option value="2">II</option>
+          <option value="3">III</option>
+          <option value="4">IV</option>
+          <option value="5">V</option>
+        </select>
+        <button type="submit">Zapisz się</button>
+      </form>
+      <img src="./travel-3122702_960_720.webp" alt="">
+    </fieldset>
+  </main>
+  <template>
+    <div  class="error-message-box">
+      <span class="error-message"></span>
+    </div>
+  </template>
+  <script src="./form.js"></script>
+</body>
+</html>

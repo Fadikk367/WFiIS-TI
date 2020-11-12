@@ -1,0 +1,75 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  border: none;
+}
+
+
+body {
+  height: 100vh;
+  background-image: url('./go-pro-1478810_1920.jpg');
+  background-position: fixed;
+  background-size: cover;
+  font-family: 'Poppins', sans-serif;
+    background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+main {
+  width: 600px;
+  padding: 40px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  transform: rotate(1deg);
+  background-color: rgba(255, 255, 255, 0.952);
+  border: 1px solid #333;
+  
+}
+
+h2 {
+  font-size: 1.8em;
+  font-weight: bold;
+  background-color: rgb(246, 188, 112);
+  border: 1px solid #333;
+  color: #333;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  padding: 5px 20px;
+}
+
+
+#participants {
+  font-size: 1.1em;
+}
+
+.participant {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid grey;
+  padding: 10px;
+}
+
+.lp {
+  width: 30px;
+  font-style: italic;
+}
+
+.name {
+  flex: 3;
+}
+
+.surname {
+  flex: 3;
+}
+
+.email {
+  flex: 5;
+}
+
+.year {
+  flex: 1;
+  text-align: center;
+}

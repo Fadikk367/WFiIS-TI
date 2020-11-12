@@ -1,0 +1,129 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  border: none;
+}
+
+body {
+  height: 100vh;
+  background-image: url('./go-pro-1478810_1920.jpg');
+  background-position: center center;
+  background-size: cover;
+}
+
+main {
+  font-family: 'Poppins', sans-serif;
+  /* width: 800px; */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+h2 {
+  padding: 10px;
+  border-radius: 3px;
+  font-size: 2em;
+  background-color: rgb(212, 137, 39);
+  margin-bottom: 20px;
+}
+
+fieldset {
+  border: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  padding: 40px;
+  background-color: rgba(255, 255, 255, 0.952);
+}
+
+img {
+  height: 520px;
+  margin-left: 40px;
+  display: block;
+}
+
+legend {
+  font-size: 1.8em;
+  font-weight: bold;
+  background-color: rgb(246, 188, 112);
+  border: 1px solid #333;
+  color: #333;
+  border-radius: 3px;
+  padding: 5px 20px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+form {
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+}
+
+label:not(:first-child) {
+  padding: 20px 0 3px 0;
+}
+
+label, input, select {
+  font-size: 1.1em;
+  font-weight: lighter;
+}
+
+
+input, select {
+  padding: 7px;
+  background-color: transparent;
+  border-bottom: 1px solid #333;
+  color: #333;
+  outline: none;
+  border-radius: 3px 3px 0 0;
+  transition: background-color 0.2s ease-in-out;
+}
+
+input:hover, select:hover, input:focus, select:focus {
+  background-color: rgb(221, 221, 221);
+}
+
+button[type=submit] {
+  font-size: 1.1em;
+  font-weight: bold;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 10px;
+  background-color: rgb(246, 188, 112);
+  color: #333;
+  margin-top: 20px;
+  margin-top: auto;
+}
+
+p {
+  padding: 20px;
+  font-size: 1.1em;
+}
+
+
+
+
+.error-message-box {
+  position: relative;
+  background-color: #c03c3c;
+  color: white;
+  padding: 5px;
+  border-radius: 3px;
+  font-size: 1em;
+  margin-top: 10px;
+}
+
+span.error-message::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: -10px;
+  left: 10px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 10px 10px 10px;
+  border-color: transparent transparent #c03c3c transparent;
+}
