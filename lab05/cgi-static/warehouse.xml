@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="./warehouse.xsl"?>
+<warehouse>
+  <sortby>name</sortby>
+  <group>
+    <title>Ciasta</title>
+    <products>
+      <product>
+        <name>Sernik</name>
+        <quantity>7</quantity>
+        <price>39.99</price>
+      </product>
+      <product>
+        <name>Murzynek</name>
+        <quantity>5</quantity>
+        <price>20.99</price>
+      </product>
+      <product>
+        <name>Tort orzechowy</name>
+        <quantity>3</quantity>
+        <price>89.99</price>
+      </product>
+      <product>
+        <name>Babka piaskowa</name>
+        <quantity>2</quantity>
+        <price>39.99</price>
+      </product>
+      <product>
+        <name>Mazurek</name>
+        <quantity>1</quantity>
+        <price>44.99</price>
+      </product>
+      <product>
+        <name>Tarta owocowa</name>
+        <quantity>2</quantity>
+        <price>34.99</price>
+      </product>
+    </products>
+  </group>
+  <group>
+    <title>Kawa</title>
+    <products>
+      <product>
+        <name>Gran Crema</name>
+        <quantity>10</quantity>
+        <price>139.99</price>
+      </product>
+      <product>
+        <name>BIO ORGANIC</name>
+        <quantity>19</quantity>
+        <price>161.49</price>
+      </product>
+      <product>
+        <name>Gran Aroma</name>
+        <quantity>10</quantity>
+        <price>99.49</price>
+      </product>
+      <product>
+        <name>Creme Fino</name>
+        <quantity>1</quantity>
+        <price>92.49</price>
+      </product>
+      <product>
+        <name>Crema Dolce</name>
+        <quantity>11</quantity>
+        <price>87.49</price>
+      </product>
+      <product>
+        <name>Classica</name>
+        <quantity>7</quantity>
+        <price>94.99</price>
+      </product>
+      <product>
+        <name>Prestigio</name>
+        <quantity>2</quantity>
+        <price>149.99</price>
+      </product>
+    </products>
+  </group>
+  <group>
+    <title>Ciastka</title>
+    <products>
+      <product>
+        <name>American cookie</name>
+        <quantity>34</quantity>
+        <price>5.99</price>
+      </product>
+      <product>
+        <name>Beza</name>
+        <quantity>4</quantity>
+        <price>9.99</price>
+      </product>
+      <product>
+        <name>Jeżyk</name>
+        <quantity>66</quantity>
+        <price>2.99</price>
+      </product>
+    </products>
+  </group>
+</warehouse>

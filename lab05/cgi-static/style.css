@@ -1,0 +1,171 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background-color: rgb(39, 39, 39);
+  color: rgb(170, 211, 123);
+}
+
+header h1 {
+  width: 1024px;
+  font-size: 2em;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+nav {
+  width: 800px;
+  margin: 0 auto;
+  padding: 20px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+nav div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav span {
+  margin-right: 20px;
+  font-size: 1.2em;
+}
+
+nav a {
+  padding: 5px 10px;
+  font-size: 1.1em;
+  color:  rgb(39, 39, 39);
+  text-decoration: none;
+  background-color: white;;
+  border: none;
+  transition: background-color 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out;
+  -webkit-box-shadow: 4px 4px 10px -1px rgba(122,122,122,1);
+  -moz-box-shadow: 4px 4px 10px -1px rgba(122,122,122,1);
+  box-shadow: 4px 4px 10px -1px rgba(122,122,122,1);
+}
+
+nav a:hover {
+  transform: scale(1.1);
+  background-color: rgb(240, 240, 240);
+}
+
+nav a:not(:last-child) {
+  margin-right: 10px;
+}
+
+main {
+  flex-grow: 1;
+  width: 1024px;
+  margin: 0 auto;
+  padding: 0 40px;
+  -webkit-box-shadow: 0px 0px 30px -7px rgba(99,99,99,1);
+  -moz-box-shadow: 0px 0px 30px -7px rgba(99,99,99,1);
+  box-shadow: 0px 0px 30px -7px rgba(99,99,99,1);
+}
+
+h2 {
+  font-size: 1.7em;
+  font-weight: 700;
+}
+
+table { 
+  border-collapse:collapse; 
+  margin: 20px auto;
+  width: 800px;
+  font-size: 1.1em;
+}
+
+thead tr th { 
+  background-color: rgb(39, 39, 39);
+  color: rgb(170, 211, 123);
+  text-align:center;
+  border-bottom: 2px solid black;
+}
+
+tbody { 
+  /* background-color: #b0d88a;  */
+  text-align: center;
+}
+
+th {
+  padding: 5px;
+}
+
+tbody th {
+  background-color: rgb(170, 211, 123);
+  color: rgb(39, 39, 39);
+  text-align: left;
+  padding: 5px;
+  padding-left: 10px;
+  border-bottom: 2px solid rgb(39, 39, 39);
+}
+
+tfoot { 
+  background-color: rgb(224, 50, 50); 
+  font-weight:bold; 
+  text-align:right 
+}
+
+td {
+  padding: 5px;
+}
+
+td:not(:last-child) {
+  border-right: 1px solid rgb(228, 228, 228);
+}
+
+tr:nth-child(odd) {
+  background-color: rgb(245, 245, 245);
+}
+
+tr:not(:last-child) {
+  border-bottom: 1px solid rgb(107, 107, 107);;
+}
+
+td.name {
+  text-align: left;
+  padding-left: 10px;
+}
+
+td.price {
+  font-style: italic;
+}
+
+footer {
+  padding: 20px;
+  font-size: 1.3em;
+  font-weight: 600;
+  color: rgb(170, 211, 123);
+  text-align: center;
+  background-color: rgb(39, 39, 39);
+}
+
+
+@media only screen and (max-width: 1024px) {
+  main {
+    width: 100%;
+    padding: 10px;
+  }
+
+  header h1 {
+    width: 100%;
+    margin: none;
+    text-align: center;
+  }
+}
