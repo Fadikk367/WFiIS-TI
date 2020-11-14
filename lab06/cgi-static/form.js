@@ -46,6 +46,8 @@ class FormValidator {
       const inputName = formInput.name;
       const inputValue = formInput.value;
 
+      console.log({ inputName, inputValue });
+
       if (this.validationConstraints.has(inputName)) {
         const constraint = this.validationConstraints.get(inputName);
 
@@ -115,7 +117,6 @@ validationConstraints.set('email', new Constraint('email', { isRequired: true, p
 
 
 const validateForm = e => {
-  // e.preventDefault();
   const formValidator = new FormValidator(document.forms.registrationForm, validationConstraints);
   formValidator.clearValidationErrorBoxes();
   const validationResult = formValidator.validateInputs();

@@ -1,5 +1,5 @@
-participants = open('./data.csv', 'r')
-
+#!/usr/bin/env python3
+import cgi
 
 def generate_html_list(participants):
   html = '<ul id="participants">\n'
@@ -21,5 +21,13 @@ def generate_html_list(participants):
   html += '</ul>\n'
   return html
 
-print(generate_html_list(participants))
 
+data_file = open('../cgi-static/data.csv')  
+participants_list = generate_html_list(data_file)   
+
+with open('../cgi-static/data.html') as data_template:
+  html = data_template.read().replace('%DATA%', participants_list)
+
+  print("Content-type: text/html") 
+  print()
+  print(html)
