@@ -46,12 +46,10 @@ class FormValidator {
       const inputName = formInput.name;
       const inputValue = formInput.value;
 
-      console.log({ inputName, inputValue });
-
       if (this.validationConstraints.has(inputName)) {
         const constraint = this.validationConstraints.get(inputName);
-
         const result = constraint.validate(inputValue);
+
         if (!result.isValid) {
           validationResult.addError(inputName, result.message);
         }
@@ -72,7 +70,6 @@ class FormValidator {
         const validationError = validationErrors.get(inputName);
 
         const errorMessageBox = errorMessageTemplate.content.cloneNode(true);
-        console.log({errorMessageBox});
         errorMessageBox.querySelector('span.error-message').textContent = validationError;
 
         formInput.parentNode.insertBefore(errorMessageBox, formInput.nextSibling);
@@ -108,6 +105,7 @@ class ValidationResult {
   }
 }
 
+// 
 const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
 const validationConstraints = new Map();
@@ -117,7 +115,8 @@ validationConstraints.set('email', new Constraint('email', { isRequired: true, p
 
 
 const validateForm = e => {
-  const formValidator = new FormValidator(document.forms.registrationForm, validationConstraints);
+  const formValidator = new FormValidator(e.target, validationConstraints);
+
   formValidator.clearValidationErrorBoxes();
   const validationResult = formValidator.validateInputs();
 
