@@ -9,48 +9,24 @@
 <body>
   <div id="quiz-container">
     <div class="quiz-question">
-      <div class="quiz-question-content">
-        <h3 class="question-title">Question 1, what about???</h3>
-        <div class="question-options">
-          <span class="question-option">answer 1</span>
-          <span class="question-option">answer 2</span>
-          <span class="question-option">answer 3</span>
-          <span class="question-option">answer 4</span>
-        </div>
-      </div>
-      <div class="quiz-question-content">
-        <h3 class="question-title">Question 2, what about???</h3>
-        <div class="question-options">
-          <span class="question-option">answer 1</span>
-          <span class="question-option">answer 2</span>
-          <span class="question-option">answer 3</span>
-          <span class="question-option">answer 4</span>
-        </div>
-      </div>
-      <div class="quiz-question-content">
-        <h3 class="question-title">Question 3, what about???</h3>
-        <div class="question-options">
-          <span class="question-option">answer 1</span>
-          <span class="question-option">answer 2</span>
-          <span class="question-option">answer 3</span>
-          <span class="question-option">answer 4</span>
-        </div>
-      </div>
-      <div class="quiz-question-content">
-        <h3 class="question-title">Question 4, what about???</h3>
-        <div class="question-options">
-          <span class="question-option">answer 1</span>
-          <span class="question-option">answer 2</span>
-          <span class="question-option">answer 3</span>
-          <span class="question-option">answer 4</span>
-        </div>
-      </div>
+      
     </div>
     <div id="quiz-controls">
       <button id="prev-button">back</button>
       <button id="next-button">next</button>
     </div>
   </div>
+  <template id="question-template">
+    <div class="quiz-question-content">
+      <h3 class="question-title"></h3>
+      <div class="question-options">
+        <span class="question-option" data-id="A"></span>
+        <span class="question-option" data-id="B"></span>
+        <span class="question-option" data-id="C"></span>
+        <span class="question-option" data-id="D"></span>
+      </div>
+    </div>
+  </template>
   <script src='./quiz.js'></script>
 </body>
 </html>
