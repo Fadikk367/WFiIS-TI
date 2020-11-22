@@ -3,94 +3,191 @@ const questionTemplate = document.getElementById('question-template');
 console.log(questionTemplate);
 
 const quizQuestionContainer = document.querySelector('.quiz-question');
-let quizQuestions = [];
 
 const prevButton = document.querySelector('#prev-button');
 const nextButton = document.querySelector('#next-button');
+const submitButton = document.querySelector('#submit-quiz');
+const questionCounter = document.querySelector('#question-count');
 
-let currentQuestion = 0;
-// const questionWidth = quizQuestionContainer.clientWidth;
-const questionWidth = 800;
+
+const quizState = {
+  currentQuestion : 0,
+  questionWidth: 800,
+  questions: [],
+  userAnswers: {
+    0: null,
+    1: null,
+    2: null,
+  }
+}
+
 
 quizQuestionContainer.style.transform = `translateX()`;
 
+const updateQuestionCounter = () => {
+  questionCounter.textContent = `${quizState.currentQuestion  + 1}/${quizState.questions.length}`;
+}
+
+const isButtonActive = button => {
+  return button.classList.contains('button-disabled');
+}
+
+const isQuizCompleted = () => {
+  return Object.values(quizState.userAnswers).every(answer => answer !== null);
+}
+
+const updateButtonsState = () => {
+  // Disable prevButton if we are on 1st question, enable otherwise
+  quizState.currentQuestion  === 0 
+    ? prevButton.classList.add('button-disabled') 
+    : prevButton.classList.remove('button-disabled');
+
+  // Disable nextButton if we are on the last question, enable otherwise
+  quizState.currentQuestion  === (quizState.questions.length - 1)
+    ? nextButton.classList.add('button-disabled') 
+    : nextButton.classList.remove('button-disabled');
+}
 
 nextButton.addEventListener('click', () => {
-  console.log(quizQuestions)
-  if (currentQuestion >= quizQuestions.length - 1 ) return;
+  console.log(quizState);
+  if (isButtonActive(nextButton)) return;
 
-  quizQuestions[currentQuestion].classList.add('animate-question-content');
-  quizQuestions[currentQuestion + 1].classList.add('animate-question-content');
+  quizState.questions[quizState.currentQuestion].classList.add('animate-question-content');
+  quizState.questions[quizState.currentQuestion  + 1].classList.add('animate-question-content');
 
-  quizQuestions[currentQuestion].addEventListener('animationend', e => {
+  quizState.questions[quizState.currentQuestion].addEventListener('animationend', e => {
     e.target.classList.remove('animate-question-content');
   });
-  quizQuestions[currentQuestion + 1].addEventListener('animationend', e => {
+  quizState.questions[quizState.currentQuestion  + 1].addEventListener('animationend', e => {
     e.target.classList.remove('animate-question-content');
   });
 
   quizQuestionContainer.style.transition = `transform 0.4s ease-in-out`;
-  currentQuestion++;
-  quizQuestionContainer.style.transform = `translateX(${-questionWidth*currentQuestion}px)`;
+  quizState.currentQuestion += 1;
+  quizQuestionContainer.style.transform = `translateX(${-quizState.questionWidth*quizState.currentQuestion }px)`;
+  updateQuestionCounter();
+  updateButtonsState();
 });
 
 
 prevButton.addEventListener('click', () => {
-  if (currentQuestion <= 0 ) return;
+  console.log(quizState);
+  if (isButtonActive(prevButton)) return;
 
-  quizQuestions[currentQuestion].classList.add('animate-question-content');
-  quizQuestions[currentQuestion - 1].classList.add('animate-question-content');
+  quizState.questions[quizState.currentQuestion].classList.add('animate-question-content');
+  quizState.questions[quizState.currentQuestion - 1].classList.add('animate-question-content');
 
-  quizQuestions[currentQuestion].addEventListener('animationend', e => {
+  quizState.questions[quizState.currentQuestion].addEventListener('animationend', e => {
     e.target.classList.remove('animate-question-content');
   });
-  quizQuestions[currentQuestion - 1].addEventListener('animationend', e => {
+  quizState.questions[quizState.currentQuestion - 1].addEventListener('animationend', e => {
     e.target.classList.remove('animate-question-content');
   });
 
   quizQuestionContainer.style.transition = `transform 0.4s ease-in-out`;
-  currentQuestion--;
-  quizQuestionContainer.style.transform = `translateX(${-questionWidth*currentQuestion}px)`;
+  quizState.currentQuestion -= 1;
+  quizQuestionContainer.style.transform = `translateX(${-quizState.questionWidth*quizState.currentQuestion }px)`;
+  updateQuestionCounter();
+  updateButtonsState();
 });
 
 
 const questionsData = [{
-  title: "Question number one?",
-  options: ["A1", "B1", "C1", "D1"],
+  title: "Which of the following programming languages ​​do you like best?",
+  options: ["JavaScript", "Java", "C++", "Python"],
 }, {
-  title: "Question number two?",
-  options: ["A2", "B2", "C2", "D2"],
+  title: "What is your favourite season?",
+  options: ["Summer", "Spring", "Autumn", "Winter"],
 }, {
-  title: "Question number thre?",
-  options: ["A3", "B3", "C3", "D3"],
+  title: "How many times a week do you workout?",
+  options: ["0", "1-2", "3-4", "5+"],
 }];
 
 
-const handleQuestionAnswerClick = e => {
-  const answer = e.target.dataset.id;
-  console.log({ answer, currentQuestion });
+const clearPreviousAnswer = (questionNumber, previouslySelectedAnswer) => {
+  const previouslySelectedOption = quizQuestionContainer.querySelector(`.quiz-question-content[data-question-number='${questionNumber}'] .question-option[data-id='${previouslySelectedAnswer}']`);
+
+  if (!!previouslySelectedOption) {
+    previouslySelectedOption.classList.remove('selected');
+  }
+}
+
+const handleAnswerQuestion = (questionId, answer) => {
+  const previouslySelectedAnswer = quizState.userAnswers[questionId];
+
+  if (previouslySelectedAnswer) {
+    clearPreviousAnswer(questionId, previouslySelectedAnswer);
+  }
+
+  quizState.userAnswers[questionId] = answer;
+
+  isQuizCompleted() 
+  ? submitButton.classList.remove('button-disabled')
+  : submitButton.classList.add('button-disabled');
 }
 
 
 const renderQuizQuestions = questions => {
   questions.forEach(question => {
     const questionElement = questionTemplate.content.cloneNode(true);
+    questionElement.addEventListener('click', function(e) {
+      const questionId = this.dataset.questionNumber;
+      console.log({ this: this, target: e.target });
+    
+      if (e.target.classList.contains('question-option')) {
+        const answer = e.target.dataset.id;
+        console.log({ answer, questionId });
+      }
+    });
 
     const questionTitle = questionElement.querySelector('.question-title');
     const questionOptions = questionElement.querySelectorAll('span.question-option');
 
     questionTitle.textContent = question.title;
     questionOptions.forEach((questionOption, i) => {
-      questionOption.textContent = question.options[i];
-      questionOption.addEventListener('click', handleQuestionAnswerClick);
+      questionOption.appendChild(document.createTextNode(question.options[i]));
     });
 
     quizQuestionContainer.appendChild(questionElement);
   });
 
-  quizQuestions = [...quizQuestionContainer.querySelectorAll('.quiz-question-content')];
+  quizState.questions = [...quizQuestionContainer.querySelectorAll('.quiz-question-content')];
+  quizState.questions.forEach((question, idx) => { 
+    question.dataset.questionNumber = idx;
+    question.addEventListener('click', function(e) {
+      const questionId = this.dataset.questionNumber;
+    
+      if (e.target.classList.contains('question-option')) {
+        e.target.classList.add('selected');
+        handleAnswerQuestion(questionId, e.target.dataset.id);
+      }
+    });
+  });
+}
+
+async function handleQuizSubmit() {
+  if (isQuizCompleted()) {
+    const url = '../cgi-bin/post_quiz.py';
+    const headers = new Headers();
+    headers.set('Content-Type', 'application/json');
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(quizState.userAnswers),
+      });
+
+      const data = await response.json();
+      console.log(data);
+    } catch(err) {
+      console.log('err');
+      console.log(err);
+    }
+  }
 }
 
 
-
+submitButton.addEventListener('click', handleQuizSubmit);
 renderQuizQuestions(questionsData);
+updateQuestionCounter();

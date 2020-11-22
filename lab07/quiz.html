@@ -4,29 +4,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./quiz.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
   <title>Document</title>
 </head>
 <body>
-  <div id="quiz-container">
-    <div class="quiz-question">
-      
+  <main>
+    <div id="quiz-container">
+      <div class="quiz-question"></div>
+      <div id="quiz-controls">
+        <button id="prev-button" class="button-disabled">&lt;</button>
+        <button id="next-button">&gt;</button>
+        <button id="submit-quiz" class="button-disabled">SUBMIT</button>
+        <span id="question-count"></span>
+      </div>
     </div>
-    <div id="quiz-controls">
-      <button id="prev-button">back</button>
-      <button id="next-button">next</button>
+  </main>
+    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quod ducimus amet magnam facilis laborum enim sint sit, molestias ipsam dolore sed cupiditate laboriosam repudiandae distinctio iusto. Mollitia quisquam ab impedit quas, officia exercitationem quidem minus debitis molestiae doloribus quis illo voluptate modi et iusto similique.</p>
+    <div>
+      <canvas id="canvas"></canvas>
     </div>
-  </div>
   <template id="question-template">
     <div class="quiz-question-content">
       <h3 class="question-title"></h3>
       <div class="question-options">
-        <span class="question-option" data-id="A"></span>
-        <span class="question-option" data-id="B"></span>
-        <span class="question-option" data-id="C"></span>
-        <span class="question-option" data-id="D"></span>
+        <span class="question-option" data-id="A">
+          <span class="option-tag">A:</span>
+        </span>
+        <span class="question-option" data-id="B">
+          <span class="option-tag">B:</span>
+        </span>
+        <span class="question-option" data-id="C">
+          <span class="option-tag">C:</span>
+        </span>
+        <span class="question-option" data-id="D">
+          <span class="option-tag">D:</span>
+        </span>
       </div>
     </div>
   </template>
   <script src='./quiz.js'></script>
+  <script src='./charts.js'></script>
 </body>
 </html>

@@ -4,10 +4,30 @@
   box-sizing: border-box;
 }
 
+body {
+  background-image: url('./assets/empty-blackboard.jpg');
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  color: white;
+
+  font-family: 'Poppins', sans-serif;
+}
+
+main {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 5px solid rgb(251, 237, 31);
+}
+
 #quiz-container {
+
   width: 800px;
-  margin: 0 auto;
-  /* border: 3px solid red; */
+  /* margin: 0 auto; */
+  border-radius: 0px 10px;
   overflow: hidden;
 }
 
@@ -25,9 +45,13 @@
 }
 
 .question-title {
-  text-align: center;
+  /* text-align: center; */
+  font-size: 1.7em;
+  letter-spacing: 3px;
+  font-weight: 500;
   padding: 20px;
-  background-color: lightgrey;
+  padding-left: 40px;
+  background-color: rgba(255, 255, 255, 0.048);
 }
 
 .question-options {
@@ -38,17 +62,63 @@
 }
 
 .question-option {
-  padding: 10px;
-  background-color: lightsalmon;
+  color: white;
+  padding: 15px;
+  font-size: 1.3em;
+  background-color: rgba(255, 255, 255, 0.068);
+  transition: all 0.3s ease-in-out;
 }
 
-.question-option {
-  padding: 10px;
-  background-color: lightsalmon;
+.option-tag {
+  font-style: italic;
+  padding-right: 10px;
+}
+
+.selected {
+  background-color: rgba(46, 180, 28, 0.609) !important;
+}
+
+.question-option:hover {
+  background-color: rgba(255, 255, 255, 0.363);
+  transform: scale(1.03);
+  cursor: pointer;
 }
 
 .animate-question-content {
   animation: anim1 0.6s;
+}
+
+#quiz-controls {
+  margin: 20px;
+  display: flex;
+  align-items: flex-end;
+}
+
+#prev-button, #next-button, #submit-quiz {
+  font-size: 1.3em;
+  color: rgb(46, 46, 46);
+  padding: 15px 20px;
+  margin-right: 5px;
+  /* border-radius: 5px; */
+  cursor: pointer;
+  font-weight: bold;
+  border: none;
+  outline: none;
+  letter-spacing: 2px;
+  /* background-color: rgba(255, 255, 255, 0.24); */
+  background-color: rgb(251, 237, 31);
+}
+
+.button-disabled {
+  background-color: rgba(251, 236, 31, 0.15) !important;
+  cursor: default !important;
+}
+
+#question-count {
+  margin-left: auto;
+  font-size: 1.2em;
+  color: rgb(251, 237, 31);
+  font-weight: 500;
 }
 
 @keyframes anim1 {
@@ -73,3 +143,13 @@
   }
 }
 
+p {
+  margin-top: 100vh;
+}
+
+
+
+#canvas {
+  width: 1000px;
+  height: 600px;
+}
