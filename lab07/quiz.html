@@ -9,7 +9,7 @@
   <title>Document</title>
 </head>
 <body>
-  <main>
+  <main class="main-quiz">
     <div id="quiz-container">
       <div class="quiz-question"></div>
       <div id="quiz-controls">
@@ -20,10 +20,6 @@
       </div>
     </div>
   </main>
-    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quod ducimus amet magnam facilis laborum enim sint sit, molestias ipsam dolore sed cupiditate laboriosam repudiandae distinctio iusto. Mollitia quisquam ab impedit quas, officia exercitationem quidem minus debitis molestiae doloribus quis illo voluptate modi et iusto similique.</p>
-    <div>
-      <canvas id="canvas"></canvas>
-    </div>
   <template id="question-template">
     <div class="quiz-question-content">
       <h3 class="question-title"></h3>
@@ -43,7 +39,16 @@
       </div>
     </div>
   </template>
-  <script src='./quiz.js'></script>
+  <template id="stats-template">
+    <article class="statistics-box">
+      <div class="question-info">
+        <h3 class="question-title"></h3>
+        <ul></ul>
+      </div>
+      <div class="question-histogram"></div>
+    </article>
+  </template>
   <script src='./charts.js'></script>
+  <script src='./quiz.js'></script>
 </body>
 </html>

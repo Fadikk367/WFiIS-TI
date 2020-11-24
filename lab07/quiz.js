@@ -112,7 +112,8 @@ const clearPreviousAnswer = (questionNumber, previouslySelectedAnswer) => {
   }
 }
 
-const handleAnswerQuestion = (questionId, answer) => {
+const handleAnswerQuestion = (questionId, optionElement) => {
+  const answer = optionElement.dataset.id;
   const previouslySelectedAnswer = quizState.userAnswers[questionId];
 
   if (previouslySelectedAnswer) {
@@ -120,6 +121,7 @@ const handleAnswerQuestion = (questionId, answer) => {
   }
 
   quizState.userAnswers[questionId] = answer;
+  optionElement.classList.add('selected');
 
   isQuizCompleted() 
   ? submitButton.classList.remove('button-disabled')
@@ -130,15 +132,6 @@ const handleAnswerQuestion = (questionId, answer) => {
 const renderQuizQuestions = questions => {
   questions.forEach(question => {
     const questionElement = questionTemplate.content.cloneNode(true);
-    questionElement.addEventListener('click', function(e) {
-      const questionId = this.dataset.questionNumber;
-      console.log({ this: this, target: e.target });
-    
-      if (e.target.classList.contains('question-option')) {
-        const answer = e.target.dataset.id;
-        console.log({ answer, questionId });
-      }
-    });
 
     const questionTitle = questionElement.querySelector('.question-title');
     const questionOptions = questionElement.querySelectorAll('span.question-option');
@@ -158,8 +151,7 @@ const renderQuizQuestions = questions => {
       const questionId = this.dataset.questionNumber;
     
       if (e.target.classList.contains('question-option')) {
-        e.target.classList.add('selected');
-        handleAnswerQuestion(questionId, e.target.dataset.id);
+        handleAnswerQuestion(questionId, e.target);
       }
     });
   });
@@ -167,22 +159,16 @@ const renderQuizQuestions = questions => {
 
 async function handleQuizSubmit() {
   if (isQuizCompleted()) {
-    const url = '../cgi-bin/post_quiz.py';
-    const headers = new Headers();
-    headers.set('Content-Type', 'application/json');
+    const encodedAnswer = encodeURI(JSON.stringify(quizState.userAnswers));
+    const url = `../../cgi-bin/lab07/post_quiz.py?answer=${encodedAnswer}`;
 
     try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(quizState.userAnswers),
-      });
-
+      const response = await fetch(url);
       const data = await response.json();
-      console.log(data);
+      showStatistics(data);
     } catch(err) {
-      console.log('err');
-      console.log(err);
+      console.log('ERROR');
+      console.error(err);
     }
   }
 }
