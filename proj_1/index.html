@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./style.css">
+  <title>Document</title>
+</head>
+<body>
+  <aside>
+    <ul>
+      <li>option 1</li>
+      <li>option 2</li>
+      <li>option 3</li>
+      <li>option 4</li>
+      <li>option 5</li>
+    </ul>
+    <h3>angle diff</h3>
+    <input type="range" id="angleInput" min="0" max="180"/>
+    <h3>length</h3>
+    <input type="range" id="lengthInput" min="100" max="200"/>
+    <h3>deepth</h3>
+    <input type="range" id="deepthInput" min="0" max="15" />
+    <h3>angle diff variance</h3>
+    <input type="range" id="angleVarianceInput" min="0" max="100"/>
+    <h3>length variance</h3>
+    <input type="range" id="lengthVarianceInput" min="0" max="100"/>
+    <h3>Branching probability</h3>
+    <input type="range" id="branchingProbabilityInput" min="0" max="100"/>
+  </aside>
+  <main>
+    <canvas></canvas>
+  </main>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/lib/alea.min.js">
+  </script>
+  <script src='./main.js'></script>
+</body>
+</html>
