@@ -1,0 +1,65 @@
+{
+  "0":{
+     "title":"Which of the following programming languages \u200b\u200bdo you like best?",
+     "answers":{
+        "A":{
+           "votes":6,
+           "text":"JavaaScript"
+        },
+        "B":{
+           "votes":3,
+           "text":"Java"
+        },
+        "C":{
+           "votes":5,
+           "text":"Python"
+        },
+        "D":{
+           "votes":1,
+           "text":"C++"
+        }
+     }
+  },
+  "1":{
+     "title":"What is your favourite season?",
+     "answers":{
+        "A":{
+           "votes":5,
+           "text":"Summer"
+        },
+        "B":{
+           "votes":4,
+           "text":"Spring"
+        },
+        "C":{
+           "votes":3,
+           "text":"Autumn"
+        },
+        "D":{
+           "votes":3,
+           "text":"Winter"
+        }
+     }
+  },
+  "2":{
+     "title":"How many times a week do you workout?",
+     "answers":{
+        "A":{
+           "votes":4,
+           "text":"0"
+        },
+        "B":{
+           "votes":4,
+           "text":"1-2"
+        },
+        "C":{
+           "votes":4,
+           "text":"3/4"
+        },
+        "D":{
+           "votes":3,
+           "text":"5+"
+        }
+     }
+  }
+}
