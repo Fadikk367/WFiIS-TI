@@ -8,25 +8,33 @@
 </head>
 <body>
   <aside>
-    <ul>
-      <li>option 1</li>
-      <li>option 2</li>
-      <li>option 3</li>
-      <li>option 4</li>
-      <li>option 5</li>
-    </ul>
     <h3>angle diff</h3>
-    <input type="range" id="angleInput" min="0" max="180"/>
+    <input type="range" id="angleInput" min="0" max="90" value="20"/>
     <h3>length</h3>
-    <input type="range" id="lengthInput" min="100" max="200"/>
+    <input type="range" id="lengthInput" min="100" max="200" value="100"/>
     <h3>deepth</h3>
-    <input type="range" id="deepthInput" min="0" max="15" />
+    <input type="range" id="deepthInput" min="0" max="15" value="10"/>
     <h3>angle diff variance</h3>
-    <input type="range" id="angleVarianceInput" min="0" max="100"/>
+    <input type="range" id="angleVarianceInput" min="0" max="20" value="0"/>
     <h3>length variance</h3>
-    <input type="range" id="lengthVarianceInput" min="0" max="100"/>
+    <input type="range" id="lengthVarianceInput" min="0" max="60" value="0"/>
     <h3>Branching probability</h3>
-    <input type="range" id="branchingProbabilityInput" min="0" max="100"/>
+    <input type="range" id="branchingProbabilityInput" min="0" max="100" value="100"/>
+    <h3>Seed</h3>
+    <input type="number" id="seedInput">
+    <hr />
+    <h4>Show leaves</h4>
+    <input type="checkbox" id="drawLeaves" />
+    <h4>Show shadows</h4>
+    <input type="checkbox" id="drawShadows" />
+    <h4>Branch color</h4>
+    <input type="color" id="branchColor" />
+    <h4>Root thickness</h4>
+    <input type="range" id="rootThickness" min="5" max="20" value="10"/>
+    <br>
+    <br>
+    <br>
+    <button id="download">Export to JPEG</button>
   </aside>
   <main>
     <canvas></canvas>
