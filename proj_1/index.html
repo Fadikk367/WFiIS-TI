@@ -4,37 +4,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./style.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
   <title>Document</title>
 </head>
 <body>
   <aside>
-    <h3>angle diff</h3>
+    <h3>Define main parameters:</h3>
+    <h3 class="range-label">angle diff</h3>
     <input type="range" id="angleInput" min="0" max="90" value="20"/>
-    <h3>length</h3>
+    <h3 class="range-label">length</h3>
     <input type="range" id="lengthInput" min="100" max="200" value="100"/>
-    <h3>deepth</h3>
+    <h3 class="range-label">deepth</h3>
     <input type="range" id="deepthInput" min="0" max="15" value="10"/>
-    <h3>angle diff variance</h3>
+    <h3 class="range-label">angle diff variance</h3>
     <input type="range" id="angleVarianceInput" min="0" max="20" value="0"/>
-    <h3>length variance</h3>
+    <h3 class="range-label">length variance</h3>
     <input type="range" id="lengthVarianceInput" min="0" max="60" value="0"/>
-    <h3>Branching probability</h3>
+    <h3 class="range-label">Branching probability</h3>
     <input type="range" id="branchingProbabilityInput" min="0" max="100" value="100"/>
-    <h3>Seed</h3>
-    <input type="number" id="seedInput">
+    <div class="controls-row">
+      <span class="checkbox-label">Seed</span>
+      <input type="number" id="seedInput">
+    </div>
     <hr />
-    <h4>Show leaves</h4>
-    <input type="checkbox" id="drawLeaves" />
-    <h4>Show shadows</h4>
-    <input type="checkbox" id="drawShadows" />
-    <h4>Branch color</h4>
-    <input type="color" id="branchColor" />
+    <h3>Style your tree!</h3>
+    <div class="controls-row">
+      <span class="checkbox-label">Show leaves</span>
+      <input type="checkbox" id="drawLeaves" />
+    </div>
+    <div class="controls-row">
+      <span class="checkbox-label">Show shadows</span>
+      <input type="checkbox" id="drawShadows" />
+    </div>
+    <div class="controls-row">
+      <span class="checkbox-label">Branch color</span>
+      <input type="color" id="branchColor" />
+    </div>
     <h4>Root thickness</h4>
     <input type="range" id="rootThickness" min="5" max="20" value="10"/>
-    <br>
-    <br>
-    <br>
-    <button id="download">Export to JPEG</button>
+    <button id="download-btn">Export to JPEG</button>
   </aside>
   <main>
     <canvas></canvas>

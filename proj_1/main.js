@@ -210,5 +210,5 @@ const download = () => {
   link.click();
 }
 
-const downloadButton = document.querySelector('button#download');
+const downloadButton = document.querySelector('button#download-btn');
 downloadButton.addEventListener('click', download);
