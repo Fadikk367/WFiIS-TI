@@ -9,45 +9,115 @@
   <title>Document</title>
 </head>
 <body>
-  <aside>
-    <h3>Define main parameters:</h3>
-    <h3 class="range-label">angle diff</h3>
-    <input type="range" id="angleInput" min="0" max="90" value="20"/>
-    <h3 class="range-label">length</h3>
-    <input type="range" id="lengthInput" min="100" max="200" value="100"/>
-    <h3 class="range-label">deepth</h3>
-    <input type="range" id="deepthInput" min="0" max="15" value="10"/>
-    <h3 class="range-label">angle diff variance</h3>
-    <input type="range" id="angleVarianceInput" min="0" max="20" value="0"/>
-    <h3 class="range-label">length variance</h3>
-    <input type="range" id="lengthVarianceInput" min="0" max="60" value="0"/>
-    <h3 class="range-label">Branching probability</h3>
-    <input type="range" id="branchingProbabilityInput" min="0" max="100" value="100"/>
-    <div class="controls-row">
-      <span class="checkbox-label">Seed</span>
-      <input type="number" id="seedInput">
-    </div>
-    <hr />
-    <h3>Style your tree!</h3>
-    <div class="controls-row">
-      <span class="checkbox-label">Show leaves</span>
-      <input type="checkbox" id="drawLeaves" />
-    </div>
-    <div class="controls-row">
-      <span class="checkbox-label">Show shadows</span>
-      <input type="checkbox" id="drawShadows" />
-    </div>
-    <div class="controls-row">
-      <span class="checkbox-label">Branch color</span>
-      <input type="color" id="branchColor" />
-    </div>
-    <h4>Root thickness</h4>
-    <input type="range" id="rootThickness" min="5" max="20" value="10"/>
-    <button id="download-btn">Export to JPEG</button>
-  </aside>
+  <header>
+    <h1>
+      Fractal Tree Generator
+      <span id="version">v1.0.0</span>
+    </h1>
+    <img src="./assets/info.svg" id="toggle-info-btn" alt="info icon">
+  </header>
   <main>
-    <canvas></canvas>
+    <aside>
+      <section class="controls-section">
+
+        <form>
+          <h3 class="form-header">Define main parameters:</h3>
+          <label class="range-label">
+            Split angle<br />
+            <input type="range" id="angleInput" min="0" max="90" value="20"/>
+          </label>
+          <label class="range-label">
+            Size<br />
+            <input type="range" id="lengthInput" min="100" max="200" value="100"/>
+          </label>
+          <label class="range-label">
+            Recursion deepth<br />
+            <input type="range" id="deepthInput" min="0" max="15" value="10"/>
+          </label>
+          <label class="range-label">
+            Split angle variance<br />
+            <input type="range" id="angleVarianceInput" min="0" max="20" value="0"/>
+          </label>
+          <label class="range-label">
+            Branch length variance<br />
+            <input type="range" id="lengthVarianceInput" min="0" max="60" value="0"/>
+          </label>
+          <label class="range-label">
+            Branching probability<br />
+            <input type="range" id="branchingProbabilityInput" min="0" max="100" value="100"/>
+          </label>
+          <div class="controls-row">
+            <span class="checkbox-label">Seed</span>
+            <input type="number" id="seedInput">
+          </div>
+        </form>
+      </section>
+      <section class="controls-section">
+        <form>
+          <h3 class="form-header">Style your tree!</h3>
+          <div class="controls-row">
+            <label class="cell-label">
+              Leaves<br />
+              <input type="checkbox" id="drawLeaves" />
+            </label>
+            <label class="cell-label">
+              Shadows<br />
+              <input type="checkbox" id="drawShadows" />
+            </label>
+            <label class="cell-label">
+              Color<br />
+              <input type="color" id="branchColor" />
+            </label>
+          </div>
+          <label class="range-label">
+            Root thickness<br />
+            <input type="range" id="rootThickness" min="5" max="20" value="10" id="root-thickness"/>
+          </label>
+        </form>
+      </section>
+      <div id="test">
+        <button id="grow-btn">Watch it grow!</button>
+        <select name="growth-speed" id="growth-speed-select">
+          <option value="SLOW">slow</option>
+          <option value="MEDIUM">medium</option>
+          <option value="FAST">fast</option>
+        </select>
+      </div>
+      </form>
+    </aside>
+    <section id="content">
+      <canvas></canvas>
+    </section>
   </main>
+  <button id="download-btn">
+    <img src="./assets/download.svg" alt="">
+    <span>Export to JPEG</span> 
+  </button>
+  <div id="modal">
+    <div id="modal-content">
+      <button id="close-modal-btn">&times;</button>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus quam, non ipsam pariatur quasi illum error veritatis, omnis perspiciatis possimus nulla aliquam temporibus ratione dignissimos, exercitationem quisquam odit saepe officiis.</p>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus quam, non ipsam pariatur quasi illum error veritatis, omnis perspiciatis possimus nulla aliquam temporibus ratione dignissimos, exercitationem quisquam odit saepe officiis.</p>
+      <br>
+      <hr>
+      <br>
+      <img src="./assets/1200px-Michelmset.jpg" alt="">
+      <br>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus quam, non ipsam pariatur quasi illum error veritatis, omnis perspiciatis possimus nulla aliquam temporibus ratione dignissimos, exercitationem quisquam odit saepe officiis.</p>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, pariatur dolores. Totam eligendi, quasi cupiditate optio iure facere. Pariatur cumque dignissimos, optio veritatis quidem aperiam ab fugit esse earum! Velit, delectus. Voluptatum, quidem recusandae adipisci laudantium similique rerum blanditiis doloribus assumenda atque, rem dolor, cupiditate quibusdam. Omnis ratione quo maxime reprehenderit, aliquid doloribus animi. Quaerat corrupti magni temporibus sint blanditiis illo illum non tempora obcaecati, ratione ad molestias deserunt dolorum consequuntur at dolore consequatur libero eaque minima tempore animi sequi ab quos. Minima, quasi nobis? Culpa soluta, officiis qui molestias fugit, magni exercitationem commodi consectetur enim laborum dicta vero adipisci?</p>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus quam, non ipsam pariatur quasi illum error veritatis, omnis perspiciatis possimus nulla aliquam temporibus ratione dignissimos, exercitationem quisquam odit saepe officiis.</p>
+      <br>
+      <img src="./assets/Fractal_Broccoli.jpg" alt="">
+      <br>
+      <hr>
+      <br>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus quam, non ipsam pariatur quasi illum error veritatis, omnis perspiciatis possimus nulla aliquam temporibus ratione dignissimos, exercitationem quisquam odit saepe officiis.</p>
+      <br>
+      <img src="./assets/HFractal_550.gif" alt="">
+      <br>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus quam, non ipsam pariatur quasi illum error veritatis, omnis perspiciatis possimus nulla aliquam temporibus ratione dignissimos, exercitationem quisquam odit saepe officiis.</p>
+    </div>
+  </div>
   <script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/lib/alea.min.js">
   </script>
   <script src='./main.js'></script>

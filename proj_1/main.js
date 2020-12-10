@@ -14,6 +14,37 @@ const ctx = canvas.getContext('2d');
 let seed = 111;
 let arng = new alea(seed);
 
+let branchPartitionFactor = 20;
+
+let treeStructure = {
+
+}
+
+class Point {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+}
+
+function getBranchPoints(begin, end) {
+  const branchPoints = [];
+  const dx = end.x - begin.x;
+  const dy = end.y - begin.y;
+
+  for (let i = 0; i < branchPartitionFactor; i++) {
+    const x = begin.x + i*dx/branchPartitionFactor;
+    const y = begin.y + i*dy/branchPartitionFactor;
+
+    branchPoints.push(new Point(x, y));
+  }
+  branchPoints.push(new Point(end.x, end.y));
+
+  return branchPoints;
+}
+
+
+
 
 function chooseWithProbability(probability) {
   return probability >= arng()*100;
@@ -56,17 +87,25 @@ function getRadians(degrees) {
 ctx.shadowColor = "rgba(0,0,0,0.8)";
 ctx.shadowBlur = branchesShadowBlur;
 
+function drawSingleLeave(point) {
+  ctx.shadowBlur = leavesShadowBlur;
+  ctx.beginPath();
+  ctx.arc(point.x - 7, point.y - 7, 7, Math.PI/4, Math.PI);
+  ctx.fill();
+  ctx.shadowBlur = branchesShadowBlur;
+  ctx.restore();
+}
+
+function drawManyLeaves(points) {
+  points.map(drawSingleLeave);
+}
+
 
 ctx.fillStyle = "green";
 function branch(point, angle, length, deepth, lineWidth) {
   if (deepth >= maxDepth) {
     if (drawLeavesCheckbox.checked) {
-      ctx.shadowBlur = leavesShadowBlur;
-      ctx.beginPath();
-      ctx.arc(point.x - 7, point.y - 7, 7, Math.PI/4, Math.PI);
-      ctx.fill();
-      ctx.shadowBlur = branchesShadowBlur;
-      ctx.restore();
+      drawSingleLeave(point);
     }
     return;
   };
@@ -81,6 +120,17 @@ function branch(point, angle, length, deepth, lineWidth) {
     y: point.y - variancedLentgh*Math.cos(variancedAngle),
   }
 
+  const branchPoints = getBranchPoints(point, nextPoint);
+  if (!treeStructure[deepth]) {
+    treeStructure[deepth] = {
+      branches: [],
+      lineWidth,
+    }
+  }
+
+  treeStructure[deepth].branches.push(branchPoints);
+  treeStructure[deepth].lineWidth = lineWidth;
+
   const nextLineWidth = lineWidth <= 1 ? 1 : lineWidth - 2;
 
   ctx.beginPath();
@@ -91,7 +141,7 @@ function branch(point, angle, length, deepth, lineWidth) {
   ctx.stroke();
 
   if (chooseWithProbability(branchingProbabilityInput.value)) {
-    branch(nextPoint, angle + getRadians(angDiff), length*0.8, deepth + 1, nextLineWidth);
+      branch(nextPoint, angle + getRadians(angDiff), length*0.8, deepth + 1, nextLineWidth);
   }
 
   if (chooseWithProbability(branchingProbabilityInput.value)) {
@@ -104,18 +154,22 @@ branch(startPoint, 0, initialLength, 0, initialLineWidth);
 angleInput.addEventListener('input', e => {
   drawLeavesCheckbox.checked = false;
   drawShadowsCheckbox.checked = false;
+  treeStructure = {};
   branchesShadowBlur = 0;
   leavesShadowBlur = 0;
   console.log(e.target.value);
   angDiff = e.target.value;
   arng = new alea(seed);
+  ctx.fillStyle = "rgb(238, 225, 225)";
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
   branch(startPoint, 0, initialLength, 0, initialLineWidth);
 });
 
 lengthInput.addEventListener('input', e => {
   drawLeavesCheckbox.checked = false;
   drawShadowsCheckbox.checked = false;
+  treeStructure = {};
   branchesShadowBlur = 0;
   console.log(e.target.value);
   initialLength = e.target.value;
@@ -127,6 +181,7 @@ lengthInput.addEventListener('input', e => {
 deepthInput.addEventListener('input', e => {
   drawLeavesCheckbox.checked = false;
   drawShadowsCheckbox.checked = false;
+  treeStructure = {};
   branchesShadowBlur = 0;
   console.log(e.target.value);
   maxDepth = e.target.value;
@@ -138,6 +193,7 @@ deepthInput.addEventListener('input', e => {
 lengthVarianceInput.addEventListener('input', e => {
   drawLeavesCheckbox.checked = false;
   drawShadowsCheckbox.checked = false;
+  treeStructure = {};
   branchesShadowBlur = 0;
   lengthVariance = e.target.value;
   arng = new alea(seed);
@@ -148,6 +204,7 @@ lengthVarianceInput.addEventListener('input', e => {
 angleVarianceInput.addEventListener('input', e => {
   drawLeavesCheckbox.checked = false;
   drawShadowsCheckbox.checked = false;
+  treeStructure = {};
   branchesShadowBlur = 0;
   angleVariance = e.target.value;
   arng = new alea(seed);
@@ -158,6 +215,7 @@ angleVarianceInput.addEventListener('input', e => {
 seedInput.addEventListener('input', e => {
   drawLeavesCheckbox.checked = false;
   drawShadowsCheckbox.checked = false;
+  treeStructure = {};
   branchesShadowBlur = 0;
   console.log(e.target.value);
   seed = parseInt(e.target.value);
@@ -169,6 +227,7 @@ seedInput.addEventListener('input', e => {
 branchingProbabilityInput.addEventListener('input', e => {
   drawLeavesCheckbox.checked = false;
   drawShadowsCheckbox.checked = false;
+  treeStructure = {};
   branchesShadowBlur = 0;
   arng = new alea(seed);
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -212,3 +271,99 @@ const download = () => {
 
 const downloadButton = document.querySelector('button#download-btn');
 downloadButton.addEventListener('click', download);
+
+
+const paramsForm = document.querySelector('form')
+paramsForm.addEventListener('input', e => {
+  console.log(e.target.id);
+});
+paramsForm.addEventListener('submit', e => e.preventDefault());
+
+const growBtn = document.querySelector('button#grow-btn');
+
+let t = 1;
+let level = 0;
+
+growBtn.addEventListener('click', () => {
+  drawLeavesCheckbox.checked = false;
+  drawShadowsCheckbox.checked = false;
+  treeStructure = {};
+  branchesShadowBlur = 0;
+  t = 1;
+  level = 0;
+  arng = new alea(seed);
+  branch(startPoint, 0, initialLength, 0, initialLineWidth);
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+  window.requestAnimationFrame(animateTreeGrowth);
+});
+
+
+function animateTreeGrowth() {
+  if (t == branchPartitionFactor + 1) {
+
+    if (level == maxDepth - 1) {
+      const leavesPoints = treeStructure[level].branches.map(branch => branch[branch.length - 1]);
+      drawManyLeaves(leavesPoints);
+    }
+    t = 1;
+    level++;
+  }
+
+  if (level == maxDepth) return;
+
+  ctx.lineWidth = treeStructure[level].lineWidth;
+  const branches = treeStructure[level].branches;
+  
+  for (let i = 0; i < branches.length; i++) {
+    const branchPoints = treeStructure[level].branches[i];
+
+    ctx.beginPath();
+    ctx.moveTo(branchPoints[t - 1].x, branchPoints[t - 1].y);
+    ctx.lineTo(branchPoints[t].x, branchPoints[t].y);
+    ctx.closePath();
+    ctx.stroke();
+  }
+
+  t++;
+
+  // if (level != maxDepth) {
+    window.requestAnimationFrame(animateTreeGrowth)
+  // }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const infoModal = document.querySelector('#modal');
+const modalContent = document.querySelector('#modal-content');
+const toggleInfoModalBtn = document.querySelector('#toggle-info-btn');
+const closeModalBtn = document.querySelector('#close-modal-btn');
+
+toggleInfoModalBtn.addEventListener('click', () => {
+  infoModal.classList.add('open-modal');
+  modalContent.style.animation = `showUp 0.3s ease-in-out`;
+});
+
+closeModalBtn.addEventListener('click', () => {
+  infoModal.classList.remove('open-modal');
+});
+
+modalContent.addEventListener('click', e => {
+  e.stopPropagation();
+});
+
+infoModal.addEventListener('click', e => {
+  e.stopPropagation();
+  infoModal.classList.remove('open-modal');
+});
