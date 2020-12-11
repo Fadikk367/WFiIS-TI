@@ -1,11 +1,13 @@
 const canvas = document.querySelector('canvas');
 const seedInput = document.querySelector('input#seedInput');
-const angleInput = document.querySelector('input#angleInput');
-const lengthInput = document.querySelector('input#lengthInput');
-const deepthInput = document.querySelector('input#deepthInput');
-const lengthVarianceInput = document.querySelector('input#lengthVarianceInput');
-const angleVarianceInput = document.querySelector('input#angleVarianceInput');
-const branchingProbabilityInput = document.querySelector('input#branchingProbabilityInput');
+
+const splitAngleInput = document.querySelector('input[name=splitAngle]');
+const branchLengthInput = document.querySelector('input[name=branchLength]');
+const currentDeepthInput = document.querySelector('input[name=currentDeepth]');
+const splitAngleVarianceInput = document.querySelector('input[name=splitAngleVariance]');
+const branchLengthVarianceInput = document.querySelector('input[name=branchLengthVariance]');
+const splitProbabilityInput = document.querySelector('input[name=splitProbability]');
+
 const drawLeavesCheckbox = document.querySelector('input#drawLeaves');
 const drawShadowsCheckbox = document.querySelector('input#drawShadows');
 const branchColorInput = document.querySelector('input#branchColor');
@@ -63,13 +65,27 @@ canvas.width = canvasWidth;
 
 ctx.lineWidth = 1;
 
+const treeStructureParams = {
+  splitAngle: splitAngleInput.value,
+  branchLength: branchLengthInput.value,
+  deepth: deepthInput.value,
+  splitAngleVariance: splitAngleVarianceInput.value,
+  branchLengthVariance: branchLengthVarianceInput.value,
+  splitProbability: splitProbabilityInput.value,
+}
+
+// const treeStyleParams = {
+//   branchColorInput
+//   branchWidth
+
+// }
 
 const divideFactor = 2;
-let initialLength = lengthInput.value;
-let maxDepth = deepthInput.value;
-let angDiff = angleInput.value;
-let lengthVariance = lengthVarianceInput.value;
-let angleVariance = angleVarianceInput.value;
+let initialLength = branchLengthInput.value;
+let deepth = deepthInput.value;
+let angDiff = splitAngleInput.value;
+let lengthVariance = branchLengthVarianceInput.value;
+let angleVariance = splitAngleVarianceInput.value;
 let leavesShadowBlur = 0;
 let branchesShadowBlur = 0;
 ctx.strokeStyle = 'black';
@@ -87,6 +103,8 @@ function getRadians(degrees) {
 ctx.shadowColor = "rgba(0,0,0,0.8)";
 ctx.shadowBlur = branchesShadowBlur;
 
+
+
 function drawSingleLeave(point) {
   ctx.shadowBlur = leavesShadowBlur;
   ctx.beginPath();
@@ -102,8 +120,8 @@ function drawManyLeaves(points) {
 
 
 ctx.fillStyle = "green";
-function branch(point, angle, length, deepth, lineWidth) {
-  if (deepth >= maxDepth) {
+function branch(point, angle, length, currentDeepth, lineWidth) {
+  if (currentDeepth >= treeStructureParams.deepth) {
     if (drawLeavesCheckbox.checked) {
       drawSingleLeave(point);
     }
@@ -121,15 +139,15 @@ function branch(point, angle, length, deepth, lineWidth) {
   }
 
   const branchPoints = getBranchPoints(point, nextPoint);
-  if (!treeStructure[deepth]) {
-    treeStructure[deepth] = {
+  if (!treeStructure[currentDeepth]) {
+    treeStructure[currentDeepth] = {
       branches: [],
       lineWidth,
     }
   }
 
-  treeStructure[deepth].branches.push(branchPoints);
-  treeStructure[deepth].lineWidth = lineWidth;
+  treeStructure[currentDeepth].branches.push(branchPoints);
+  treeStructure[currentDeepth].lineWidth = lineWidth;
 
   const nextLineWidth = lineWidth <= 1 ? 1 : lineWidth - 2;
 
@@ -140,18 +158,19 @@ function branch(point, angle, length, deepth, lineWidth) {
   ctx.closePath();
   ctx.stroke();
 
-  if (chooseWithProbability(branchingProbabilityInput.value)) {
-      branch(nextPoint, angle + getRadians(angDiff), length*0.8, deepth + 1, nextLineWidth);
+  if (chooseWithProbability(splitProbabilityInput.value)) {
+      branch(nextPoint, angle + getRadians(angDiff), length*0.8, currentDeepth + 1, nextLineWidth);
   }
 
-  if (chooseWithProbability(branchingProbabilityInput.value)) {
-    branch(nextPoint, angle - getRadians(angDiff), length*0.8, deepth + 1, nextLineWidth);
+  if (chooseWithProbability(splitProbabilityInput.value)) {
+    branch(nextPoint, angle - getRadians(angDiff), length*0.8, currentDeepth + 1, nextLineWidth);
   }
 }
 
 branch(startPoint, 0, initialLength, 0, initialLineWidth);
 
-angleInput.addEventListener('input', e => {
+
+splitAngleInput.addEventListener('input', e => {
   drawLeavesCheckbox.checked = false;
   drawShadowsCheckbox.checked = false;
   treeStructure = {};
@@ -166,7 +185,7 @@ angleInput.addEventListener('input', e => {
   branch(startPoint, 0, initialLength, 0, initialLineWidth);
 });
 
-lengthInput.addEventListener('input', e => {
+branchLengthInput.addEventListener('input', e => {
   drawLeavesCheckbox.checked = false;
   drawShadowsCheckbox.checked = false;
   treeStructure = {};
@@ -184,13 +203,13 @@ deepthInput.addEventListener('input', e => {
   treeStructure = {};
   branchesShadowBlur = 0;
   console.log(e.target.value);
-  maxDepth = e.target.value;
+  treeStructureParams.deepth = e.target.value;
   arng = new alea(seed);
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   branch(startPoint, 0, initialLength, 0, initialLineWidth);
 });
 
-lengthVarianceInput.addEventListener('input', e => {
+branchLengthVarianceInput.addEventListener('input', e => {
   drawLeavesCheckbox.checked = false;
   drawShadowsCheckbox.checked = false;
   treeStructure = {};
@@ -201,7 +220,7 @@ lengthVarianceInput.addEventListener('input', e => {
   branch(startPoint, 0, initialLength, 0, initialLineWidth);
 });
 
-angleVarianceInput.addEventListener('input', e => {
+splitAngleVarianceInput.addEventListener('input', e => {
   drawLeavesCheckbox.checked = false;
   drawShadowsCheckbox.checked = false;
   treeStructure = {};
@@ -224,7 +243,7 @@ seedInput.addEventListener('input', e => {
   branch(startPoint, 0, initialLength, 0, initialLineWidth);
 })
 
-branchingProbabilityInput.addEventListener('input', e => {
+splitProbabilityInput.addEventListener('input', e => {
   drawLeavesCheckbox.checked = false;
   drawShadowsCheckbox.checked = false;
   treeStructure = {};
@@ -273,11 +292,15 @@ const downloadButton = document.querySelector('button#download-btn');
 downloadButton.addEventListener('click', download);
 
 
-const paramsForm = document.querySelector('form')
-paramsForm.addEventListener('input', e => {
-  console.log(e.target.id);
+const treeStructureForm = document.querySelector('form[name=tree-structure-form]')
+treeStructureForm.addEventListener('input', e => {
+  console.log({
+    name: e.target.name,
+    value: e.target.value,
+  });
 });
-paramsForm.addEventListener('submit', e => e.preventDefault());
+
+treeStructureForm.addEventListener('submit', e => e.preventDefault());
 
 const growBtn = document.querySelector('button#grow-btn');
 
@@ -302,7 +325,7 @@ growBtn.addEventListener('click', () => {
 function animateTreeGrowth() {
   if (t == branchPartitionFactor + 1) {
 
-    if (level == maxDepth - 1) {
+    if (level == treeStructureParams.deepth - 1) {
       const leavesPoints = treeStructure[level].branches.map(branch => branch[branch.length - 1]);
       drawManyLeaves(leavesPoints);
     }
@@ -310,7 +333,7 @@ function animateTreeGrowth() {
     level++;
   }
 
-  if (level == maxDepth) return;
+  if (level == treeStructureParams.deepth) return;
 
   ctx.lineWidth = treeStructure[level].lineWidth;
   const branches = treeStructure[level].branches;
@@ -327,7 +350,7 @@ function animateTreeGrowth() {
 
   t++;
 
-  // if (level != maxDepth) {
+  // if (level != treeStructureParams.deepth) {
     window.requestAnimationFrame(animateTreeGrowth)
   // }
 }
