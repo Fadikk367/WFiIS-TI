@@ -11,10 +11,87 @@ const splitProbabilityInput = document.querySelector('input[name=splitProbabilit
 const drawLeavesCheckbox = document.querySelector('input#drawLeaves');
 const drawShadowsCheckbox = document.querySelector('input#drawShadows');
 const branchColorInput = document.querySelector('input#branchColor');
-const rootThickness = document.querySelector('input#rootThickness');
+const rootThicknessInput = document.querySelector('input[name=rootThickness]');
 const ctx = canvas.getContext('2d');
-let seed = 111;
-let arng = new alea(seed);
+
+const defaultSeed = 111;
+
+// function debounce(func, wait, immediate) {
+// 	let timeout;
+// 	return function() {
+// 		const context = this, args = arguments;
+// 		const later = function() {
+// 			timeout = null;
+// 			if (!immediate) func.apply(context, args);
+// 		};
+// 		const callNow = immediate && !timeout;
+// 		clearTimeout(timeout);
+// 		timeout = setTimeout(later, wait);
+// 		if (callNow) func.apply(context, args);
+// 	};
+// };
+
+function throttle(func, wait, options) {
+  var context, args, result;
+  var timeout = null;
+  var previous = 0;
+  if (!options) options = {};
+  var later = function() {
+    previous = options.leading === false ? 0 : Date.now();
+    timeout = null;
+    result = func.apply(context, args);
+    if (!timeout) context = args = null;
+  };
+  return function() {
+    var now = Date.now();
+    if (!previous && options.leading === false) previous = now;
+    var remaining = wait - (now - previous);
+    context = this;
+    args = arguments;
+    if (remaining <= 0 || remaining > wait) {
+      if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
+      previous = now;
+      result = func.apply(context, args);
+      if (!timeout) context = args = null;
+    } else if (!timeout && options.trailing !== false) {
+      timeout = setTimeout(later, remaining);
+    }
+    return result;
+  };
+};
+
+const treeStructureParams = {
+  splitAngle: splitAngleInput.value,
+  branchLength: branchLengthInput.value,
+  deepth: deepthInput.value,
+  splitAngleVariance: splitAngleVarianceInput.value,
+  branchLengthVariance: branchLengthVarianceInput.value,
+  splitProbability: splitProbabilityInput.value,
+  seed: defaultSeed,
+}
+
+const defaultRootThickness = rootThicknessInput.value;
+const defaultShadowColor = "rgba(0,0,0,0.8)";
+const defaultBranchColor = branchColorInput.value;
+const defaultLeafColor = "green";
+const defaultBranchShadowBlur = 3;
+const defaultLeafShadowBlur = 3;
+
+const treeTheme = {
+  rootThickness: defaultRootThickness,
+  branchColor: defaultBranchColor,
+  shadowColor: defaultShadowColor,
+  leafColor: defaultLeafColor,
+  branchShadowBlur: defaultBranchShadowBlur,
+  leafShadowBlur: defaultLeafShadowBlur,
+  isDrawingLeaves: false,
+  isDrawingShadows: false,
+}
+
+let arng = new alea(treeStructureParams.seed);
 
 let branchPartitionFactor = 20;
 
@@ -65,14 +142,7 @@ canvas.width = canvasWidth;
 
 ctx.lineWidth = 1;
 
-const treeStructureParams = {
-  splitAngle: splitAngleInput.value,
-  branchLength: branchLengthInput.value,
-  deepth: deepthInput.value,
-  splitAngleVariance: splitAngleVarianceInput.value,
-  branchLengthVariance: branchLengthVarianceInput.value,
-  splitProbability: splitProbabilityInput.value,
-}
+
 
 // const treeStyleParams = {
 //   branchColorInput
@@ -80,16 +150,16 @@ const treeStructureParams = {
 
 // }
 
-const divideFactor = 2;
+
 let initialLength = branchLengthInput.value;
-let deepth = deepthInput.value;
-let angDiff = splitAngleInput.value;
+// let deepth = deepthInput.value;
+// let treeStructureParams.splitAngle = splitAngleInput.value;
 let lengthVariance = branchLengthVarianceInput.value;
 let angleVariance = splitAngleVarianceInput.value;
 let leavesShadowBlur = 0;
 let branchesShadowBlur = 0;
 ctx.strokeStyle = 'black';
-let initialLineWidth = 10;
+
 const startPoint = {
   x: parseInt(canvasWidth / 2),
   y: canvasHeight - 50,
@@ -103,14 +173,23 @@ function getRadians(degrees) {
 ctx.shadowColor = "rgba(0,0,0,0.8)";
 ctx.shadowBlur = branchesShadowBlur;
 
-
+function resetTreeParams() {
+  drawLeavesCheckbox.checked = false;
+  drawShadowsCheckbox.checked = false;
+  treeStructure = {};
+  treeTheme.isDrawingLeaves = false;
+  treeTheme.isDrawingShadows = false;
+}
 
 function drawSingleLeave(point) {
-  ctx.shadowBlur = leavesShadowBlur;
+  ctx.save();
+
+  ctx.shadowBlur = treeTheme.isDrawingShadows ? treeTheme.leafShadowBlur : 0;
+  ctx.fillStyle = treeTheme.leafColor
   ctx.beginPath();
   ctx.arc(point.x - 7, point.y - 7, 7, Math.PI/4, Math.PI);
   ctx.fill();
-  ctx.shadowBlur = branchesShadowBlur;
+
   ctx.restore();
 }
 
@@ -119,17 +198,16 @@ function drawManyLeaves(points) {
 }
 
 
-ctx.fillStyle = "green";
 function branch(point, angle, length, currentDeepth, lineWidth) {
   if (currentDeepth >= treeStructureParams.deepth) {
-    if (drawLeavesCheckbox.checked) {
+    if (treeTheme.isDrawingLeaves) {
       drawSingleLeave(point);
     }
     return;
   };
 
-  const variancedLentgh = length * (1.0 + (chooseWithProbability(50) ? lengthVariance/100 : - lengthVariance/100));
-  const variancedAngle = angle * (1.0 + (chooseWithProbability(50) ? angleVariance/100 : - angleVariance/100))
+  const variancedLentgh = length * (1.0 + (chooseWithProbability(50) ? treeStructureParams.branchLengthVariance/100 : - treeStructureParams.branchLengthVariance/100));
+  const variancedAngle = angle * (1.0 + (chooseWithProbability(50) ? treeStructureParams.splitAngleVariance/100 : - treeStructureParams.splitAngleVariance/100))
 
   const nextPoint = {
     // x: point.x + length*Math.sin(angle)*(1.0 + (chooseWithProbability(50) ? lengthVariance/100 : - lengthVariance/100)),
@@ -151,6 +229,8 @@ function branch(point, angle, length, currentDeepth, lineWidth) {
 
   const nextLineWidth = lineWidth <= 1 ? 1 : lineWidth - 2;
 
+  ctx.strokeStyle = treeTheme.branchColor;
+  ctx.shadowBlur = treeTheme.isDrawingShadows ? treeTheme.branchShadowBlur : 0;
   ctx.beginPath();
   ctx.lineWidth = lineWidth;
   ctx.moveTo(point.x, point.y);
@@ -158,127 +238,85 @@ function branch(point, angle, length, currentDeepth, lineWidth) {
   ctx.closePath();
   ctx.stroke();
 
-  if (chooseWithProbability(splitProbabilityInput.value)) {
-      branch(nextPoint, angle + getRadians(angDiff), length*0.8, currentDeepth + 1, nextLineWidth);
+  if (chooseWithProbability(treeStructureParams.splitProbability)) {
+      branch(nextPoint, angle + getRadians(treeStructureParams.splitAngle), length*0.8, currentDeepth + 1, nextLineWidth);
   }
 
-  if (chooseWithProbability(splitProbabilityInput.value)) {
-    branch(nextPoint, angle - getRadians(angDiff), length*0.8, currentDeepth + 1, nextLineWidth);
+  if (chooseWithProbability(treeStructureParams.splitProbability)) {
+    branch(nextPoint, angle - getRadians(treeStructureParams.splitAngle), length*0.8, currentDeepth + 1, nextLineWidth);
   }
 }
 
-branch(startPoint, 0, initialLength, 0, initialLineWidth);
+branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
 
 
-splitAngleInput.addEventListener('input', e => {
-  drawLeavesCheckbox.checked = false;
-  drawShadowsCheckbox.checked = false;
-  treeStructure = {};
-  branchesShadowBlur = 0;
-  leavesShadowBlur = 0;
-  console.log(e.target.value);
-  angDiff = e.target.value;
-  arng = new alea(seed);
-  ctx.fillStyle = "rgb(238, 225, 225)";
+
+
+const treeStructureForm = document.querySelector('form[name=tree-structure-form]');
+
+function handleStructureFormInput(e) {
+  treeStructureParams[e.target.name] = parseInt(e.target.value);
+
+  resetTreeParams();
+  arng = new alea(treeStructureParams.seed);
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-  branch(startPoint, 0, initialLength, 0, initialLineWidth);
-});
+  branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
+}
 
-branchLengthInput.addEventListener('input', e => {
-  drawLeavesCheckbox.checked = false;
-  drawShadowsCheckbox.checked = false;
-  treeStructure = {};
-  branchesShadowBlur = 0;
-  console.log(e.target.value);
-  initialLength = e.target.value;
-  arng = new alea(seed);
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  branch(startPoint, 0, initialLength, 0, initialLineWidth);
-});
+treeStructureForm.addEventListener('input', throttle(handleStructureFormInput, 33));
+treeStructureForm.addEventListener('submit', e => e.preventDefault());
 
-deepthInput.addEventListener('input', e => {
-  drawLeavesCheckbox.checked = false;
-  drawShadowsCheckbox.checked = false;
-  treeStructure = {};
-  branchesShadowBlur = 0;
-  console.log(e.target.value);
-  treeStructureParams.deepth = e.target.value;
-  arng = new alea(seed);
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  branch(startPoint, 0, initialLength, 0, initialLineWidth);
-});
 
-branchLengthVarianceInput.addEventListener('input', e => {
-  drawLeavesCheckbox.checked = false;
-  drawShadowsCheckbox.checked = false;
-  treeStructure = {};
-  branchesShadowBlur = 0;
-  lengthVariance = e.target.value;
-  arng = new alea(seed);
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  branch(startPoint, 0, initialLength, 0, initialLineWidth);
-});
 
-splitAngleVarianceInput.addEventListener('input', e => {
-  drawLeavesCheckbox.checked = false;
-  drawShadowsCheckbox.checked = false;
-  treeStructure = {};
-  branchesShadowBlur = 0;
-  angleVariance = e.target.value;
-  arng = new alea(seed);
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  branch(startPoint, 0, initialLength, 0, initialLineWidth);
-});
 
-seedInput.addEventListener('input', e => {
-  drawLeavesCheckbox.checked = false;
-  drawShadowsCheckbox.checked = false;
-  treeStructure = {};
-  branchesShadowBlur = 0;
-  console.log(e.target.value);
-  seed = parseInt(e.target.value);
-  arng = new alea(seed);
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  branch(startPoint, 0, initialLength, 0, initialLineWidth);
-})
+const treeThemeForm = document.querySelector('form[name=treeThemeForm]');
 
-splitProbabilityInput.addEventListener('input', e => {
-  drawLeavesCheckbox.checked = false;
-  drawShadowsCheckbox.checked = false;
-  treeStructure = {};
-  branchesShadowBlur = 0;
-  arng = new alea(seed);
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  branch(startPoint, 0, initialLength, 0, initialLineWidth);
-});
+function handleThemeFormInput(e) {
+  treeTheme[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
 
-drawLeavesCheckbox.addEventListener('change', e => {
-  arng = new alea(seed);
+  if (e.target.name === "rootThickness" || e.target.name === "branchColor") {
+    resetTreeParams();
+  }
+  arng = new alea(treeStructureParams.seed);
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  branch(startPoint, 0, initialLength, 0, initialLineWidth);
-});
+  branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
+}
 
-drawShadowsCheckbox.addEventListener('change', e => {
-  branchesShadowBlur = 5;
-  arng = new alea(seed);
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  branch(startPoint, 0, initialLength, 0, initialLineWidth);
-});
+treeThemeForm.addEventListener('input', throttle(handleThemeFormInput, 50));
+treeThemeForm.addEventListener('submit', e => e.preventDefault());
 
-branchColorInput.addEventListener('change', e => {
-  ctx.strokeStyle = e.target.value;
-  arng = new alea(seed);
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  branch(startPoint, 0, initialLength, 0, initialLineWidth);
-});
 
-rootThickness.addEventListener('input', e => {
-  initialLineWidth = e.target.value;
-  arng = new alea(seed);
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  branch(startPoint, 0, initialLength, 0, initialLineWidth);
-});
+
+
+
+// drawLeavesCheckbox.addEventListener('change', e => {
+//   arng = new alea(treeStructureParams.seed);
+//   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+//   branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.lineWidth);
+// });
+
+// drawShadowsCheckbox.addEventListener('change', e => {
+//   branchesShadowBlur = 5;
+//   arng = new alea(treeStructureParams.seed);
+//   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+//   branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.lineWidth);
+// });
+
+// function handleColorChange(e) {
+//   ctx.strokeStyle = e.target.value;
+//   arng = new alea(treeStructureParams.seed);
+//   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+//   branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.lineWidth);
+// }
+
+// branchColorInput.addEventListener('input', throttle(handleColorChange, 50));
+
+// rootThicknessInput.addEventListener('input', e => {
+//   treeTheme.lineWidth = e.target.value;
+//   arng = new alea(treeStructureParams.seed);
+//   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+//   branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.lineWidth);
+// });
 
 
 const download = () => {
@@ -290,17 +328,6 @@ const download = () => {
 
 const downloadButton = document.querySelector('button#download-btn');
 downloadButton.addEventListener('click', download);
-
-
-const treeStructureForm = document.querySelector('form[name=tree-structure-form]')
-treeStructureForm.addEventListener('input', e => {
-  console.log({
-    name: e.target.name,
-    value: e.target.value,
-  });
-});
-
-treeStructureForm.addEventListener('submit', e => e.preventDefault());
 
 const growBtn = document.querySelector('button#grow-btn');
 
@@ -314,9 +341,10 @@ growBtn.addEventListener('click', () => {
   branchesShadowBlur = 0;
   t = 1;
   level = 0;
-  arng = new alea(seed);
-  branch(startPoint, 0, initialLength, 0, initialLineWidth);
+  arng = new alea(treeStructureParams.seed);
+  branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  ctx.shadowBlur = treeTheme.branchShadowBlur;
 
   window.requestAnimationFrame(animateTreeGrowth);
 });

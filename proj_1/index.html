@@ -47,30 +47,30 @@
           </label>
           <div class="controls-row">
             <span class="checkbox-label">Seed</span>
-            <input type="number" id="seedInput">
+            <input type="number" id="seedInput" name="seed">
           </div>
         </form>
       </section>
       <section class="controls-section">
-        <form name="tree-style-form">
+        <form name="treeThemeForm">
           <h3 class="form-header">Style your tree!</h3>
           <div class="controls-row">
             <label class="cell-label">
               Leaves<br />
-              <input type="checkbox" id="drawLeaves" />
+              <input type="checkbox" id="drawLeaves" name="isDrawingLeaves"/>
             </label>
             <label class="cell-label">
               Shadows<br />
-              <input type="checkbox" id="drawShadows" />
+              <input type="checkbox" id="drawShadows" name="isDrawingShadows"/>
             </label>
             <label class="cell-label">
               Color<br />
-              <input type="color" id="branchColor" />
+              <input type="color" id="branchColor" name="branchColor"/>
             </label>
           </div>
           <label class="range-label">
             Root thickness<br />
-            <input type="range" id="rootThickness" min="5" max="20" value="10" id="root-thickness"/>
+            <input type="range" name="rootThickness" min="5" max="20" value="10" id="root-thickness-input"/>
           </label>
         </form>
       </section>
