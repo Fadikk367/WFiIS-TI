@@ -1,4 +1,5 @@
 const canvas = document.querySelector('canvas');
+const canvasContainer = document.querySelector('section#content');
 const seedInput = document.querySelector('input#seedInput');
 
 const splitAngleInput = document.querySelector('input[name=splitAngle]');
@@ -16,20 +17,6 @@ const ctx = canvas.getContext('2d');
 
 const defaultSeed = 111;
 
-// function debounce(func, wait, immediate) {
-// 	let timeout;
-// 	return function() {
-// 		const context = this, args = arguments;
-// 		const later = function() {
-// 			timeout = null;
-// 			if (!immediate) func.apply(context, args);
-// 		};
-// 		const callNow = immediate && !timeout;
-// 		clearTimeout(timeout);
-// 		timeout = setTimeout(later, wait);
-// 		if (callNow) func.apply(context, args);
-// 	};
-// };
 
 function throttle(func, wait, options) {
   var context, args, result;
@@ -129,26 +116,39 @@ function chooseWithProbability(probability) {
   return probability >= arng()*100;
 }
 
-canvas.style.height = '100%';
-canvas.style.width = '100%';
+// canvas.style.height = '100%';
+// canvas.style.width = '100%';
 
 console.dir(canvas);
 
-const canvasHeight = canvas.offsetHeight;
-const canvasWidth = canvas.offsetWidth;
+let canvasHeight = canvas.offsetHeight;
+let canvasWidth = canvas.offsetWidth;
 
 canvas.height = canvasHeight;
 canvas.width = canvasWidth;
 
 ctx.lineWidth = 1;
 
+let startPoint = {
+  x: parseInt(canvasWidth / 2),
+  y: canvasHeight - 50,
+}
+
+window.addEventListener('resize', e => {
+  console.log('resize')
+  // canvas.style.height = canvasContainer.offsetHeight;
+  // canvas.style.width = canvasContainer.offsetWidth;
+  canvas.height = canvasContainer.offsetHeight;
+  canvas.width = canvasContainer.offsetWidth;
+
+  startPoint = {
+    x: parseInt(canvasWidth / 2),
+    y: canvasHeight - 50,
+  }
+
+})
 
 
-// const treeStyleParams = {
-//   branchColorInput
-//   branchWidth
-
-// }
 
 
 let initialLength = branchLengthInput.value;
@@ -160,10 +160,7 @@ let leavesShadowBlur = 0;
 let branchesShadowBlur = 0;
 ctx.strokeStyle = 'black';
 
-const startPoint = {
-  x: parseInt(canvasWidth / 2),
-  y: canvasHeight - 50,
-}
+
 
 function getRadians(degrees) {
   return degrees * Math.PI / 180;
@@ -287,36 +284,38 @@ treeThemeForm.addEventListener('submit', e => e.preventDefault());
 
 
 
+function handleWindowResize(e) {
+  // Clear canvas of previous size - before resize
+  
+  // Update canvas dimensions to current once
+  canvasWidth = canvasContainer.offsetWidth;
+  canvasHeight = canvasContainer.offsetHeight;
+  
+  canvas.style.width = canvasWidth;
+  canvas.style.height = canvasHeight;
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
+  
+  startPoint = {
+    x: parseInt(canvasContainer.offsetWidth / 2),
+    y: canvasContainer.offsetHeight - 50,
+  };
+  
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  resetTreeParams();
+  arng = new alea(treeStructureParams.seed);
+  branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
+}
+
+// window.addEventListener('resize', handleWindowResize);
+window.addEventListener('resize', handleWindowResize);
 
 
-// drawLeavesCheckbox.addEventListener('change', e => {
-//   arng = new alea(treeStructureParams.seed);
-//   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-//   branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.lineWidth);
-// });
 
-// drawShadowsCheckbox.addEventListener('change', e => {
-//   branchesShadowBlur = 5;
-//   arng = new alea(treeStructureParams.seed);
-//   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-//   branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.lineWidth);
-// });
 
-// function handleColorChange(e) {
-//   ctx.strokeStyle = e.target.value;
-//   arng = new alea(treeStructureParams.seed);
-//   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-//   branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.lineWidth);
-// }
 
-// branchColorInput.addEventListener('input', throttle(handleColorChange, 50));
 
-// rootThicknessInput.addEventListener('input', e => {
-//   treeTheme.lineWidth = e.target.value;
-//   arng = new alea(treeStructureParams.seed);
-//   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-//   branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.lineWidth);
-// });
+
 
 
 const download = () => {
@@ -335,18 +334,43 @@ let t = 1;
 let level = 0;
 
 growBtn.addEventListener('click', () => {
-  drawLeavesCheckbox.checked = false;
-  drawShadowsCheckbox.checked = false;
-  treeStructure = {};
-  branchesShadowBlur = 0;
-  t = 1;
-  level = 0;
-  arng = new alea(treeStructureParams.seed);
-  branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  ctx.shadowBlur = treeTheme.branchShadowBlur;
 
-  window.requestAnimationFrame(animateTreeGrowth);
+
+  // t = 1;
+  // level = 0;
+  // arng = new alea(treeStructureParams.seed);
+  // branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
+  // ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  // ctx.shadowBlur = treeTheme.branchShadowBlur;
+
+  // window.requestAnimationFrame(animateTreeGrowth);
+
+  // const first = 200;
+  // const seccond = 400;
+  const animationCanvas = document.createElement('canvas');
+  animationCanvas.width = canvasWidth;
+  animationCanvas.height = canvasHeight;
+  animationCanvas.style.width = canvasWidth;
+  animationCanvas.style.height = canvasHeight;
+  canvas.style.display = 'none';
+  canvasContainer.appendChild(animationCanvas);
+  const offscreen = animationCanvas.transferControlToOffscreen();
+
+  const treeGrowthAnimationWorker = new Worker('./animatedThreeGrowth.js');
+  treeGrowthAnimationWorker.onmessage = function(evt) {
+    if (evt.data.dataSent) {
+      treeGrowthAnimationWorker.postMessage({ canvas: offscreen }, [offscreen]);
+    }
+
+    if (evt.data.isAnimationFinished) {
+      canvasContainer.removeChild(animationCanvas);
+      canvas.style.display = 'block';
+      arng = new alea(treeStructureParams.seed);
+      // branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
+    }
+  };
+  
+  treeGrowthAnimationWorker.postMessage([treeStructure, treeStructureParams, treeTheme]);
 });
 
 
@@ -403,7 +427,7 @@ const closeModalBtn = document.querySelector('#close-modal-btn');
 
 toggleInfoModalBtn.addEventListener('click', () => {
   infoModal.classList.add('open-modal');
-  modalContent.style.animation = `showUp 0.3s ease-in-out`;
+  modalContent.style.animation = `slideIn 0.4s ease-in-out`;
 });
 
 closeModalBtn.addEventListener('click', () => {
