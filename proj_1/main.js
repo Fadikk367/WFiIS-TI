@@ -1,5 +1,5 @@
 const canvas = document.querySelector('canvas');
-const canvasContainer = document.querySelector('section#content');
+const canvasContainer = document.querySelector('#content');
 const seedInput = document.querySelector('input#seedInput');
 
 const splitAngleInput = document.querySelector('input[name=splitAngle]');
@@ -17,7 +17,7 @@ const ctx = canvas.getContext('2d');
 
 const defaultSeed = 111;
 
-
+// Throttle function coppied from lodash library - I only needed this one so it would be pointles to include or download whole lib
 function throttle(func, wait, options) {
   var context, args, result;
   var timeout = null;
@@ -82,9 +82,7 @@ let arng = new alea(treeStructureParams.seed);
 
 let branchPartitionFactor = 20;
 
-let treeStructure = {
-
-}
+let treeStructure = {}
 
 class Point {
   constructor(x, y) {
@@ -93,6 +91,7 @@ class Point {
   }
 }
 
+// Splits branch into branchPartitionFactor + 1 points in order to proceed tree growth animation
 function getBranchPoints(begin, end) {
   const branchPoints = [];
   const dx = end.x - begin.x;
@@ -110,16 +109,7 @@ function getBranchPoints(begin, end) {
 }
 
 
-
-
-function chooseWithProbability(probability) {
-  return probability >= arng()*100;
-}
-
-// canvas.style.height = '100%';
-// canvas.style.width = '100%';
-
-console.dir(canvas);
+const chooseWithProbability = probability => (probability >= arng()*100);
 
 let canvasHeight = canvas.offsetHeight;
 let canvasWidth = canvas.offsetWidth;
@@ -127,40 +117,21 @@ let canvasWidth = canvas.offsetWidth;
 canvas.height = canvasHeight;
 canvas.width = canvasWidth;
 
-ctx.lineWidth = 1;
-
 let startPoint = {
   x: parseInt(canvasWidth / 2),
   y: canvasHeight - 50,
 }
 
-window.addEventListener('resize', e => {
-  console.log('resize')
-  // canvas.style.height = canvasContainer.offsetHeight;
-  // canvas.style.width = canvasContainer.offsetWidth;
-  canvas.height = canvasContainer.offsetHeight;
-  canvas.width = canvasContainer.offsetWidth;
+function fitCanvasToContainer() {
+  canvasWidth = canvasContainer.offsetWidth;
+  canvasHeight = canvasContainer.offsetHeight;
+  
+  canvas.style.width = canvasWidth;
+  canvas.style.height = canvasHeight;
 
-  startPoint = {
-    x: parseInt(canvasWidth / 2),
-    y: canvasHeight - 50,
-  }
-
-})
-
-
-
-
-let initialLength = branchLengthInput.value;
-// let deepth = deepthInput.value;
-// let treeStructureParams.splitAngle = splitAngleInput.value;
-let lengthVariance = branchLengthVarianceInput.value;
-let angleVariance = splitAngleVarianceInput.value;
-let leavesShadowBlur = 0;
-let branchesShadowBlur = 0;
-ctx.strokeStyle = 'black';
-
-
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
+}
 
 function getRadians(degrees) {
   return degrees * Math.PI / 180;
@@ -168,7 +139,7 @@ function getRadians(degrees) {
 
 
 ctx.shadowColor = "rgba(0,0,0,0.8)";
-ctx.shadowBlur = branchesShadowBlur;
+
 
 function resetTreeParams() {
   drawLeavesCheckbox.checked = false;
@@ -194,24 +165,46 @@ function drawManyLeaves(points) {
   points.map(drawSingleLeave);
 }
 
+const calculateVariancedLength = (length, branchLengthVariance) => (
+  length * (1.0 + branchLengthVariance/100 * (chooseWithProbability(50) ? 1 : -1))
+);
 
+const calculateVariancedAngle = (angle, splitAngleVariance) => (
+  angle * (1.0 + splitAngleVariance/100 * (chooseWithProbability(50) ? 1 : -1))
+);
+
+const calculateNextLineWidth = lineWidth => lineWidth <= 1 ? 1 : lineWidth - 2;
+
+const isBranchFinished = currentDeepth => currentDeepth >= treeStructureParams.deepth;
+
+function drawBranch(startPoint, endPoint, lineWidth) {
+  ctx.strokeStyle = treeTheme.branchColor;
+  ctx.shadowBlur = treeTheme.isDrawingShadows ? treeTheme.branchShadowBlur : 0;
+  ctx.lineWidth = lineWidth;
+
+  ctx.beginPath();
+  ctx.moveTo(startPoint.x, startPoint.y);
+  ctx.lineTo(endPoint.x, endPoint.y);
+  ctx.closePath();
+  ctx.stroke();
+}
+
+// Core function in the app - this one is called recursively to draw a tree
 function branch(point, angle, length, currentDeepth, lineWidth) {
-  if (currentDeepth >= treeStructureParams.deepth) {
+  if (isBranchFinished(currentDeepth)) {
     if (treeTheme.isDrawingLeaves) {
       drawSingleLeave(point);
     }
     return;
   };
 
-  const variancedLentgh = length * (1.0 + (chooseWithProbability(50) ? treeStructureParams.branchLengthVariance/100 : - treeStructureParams.branchLengthVariance/100));
-  const variancedAngle = angle * (1.0 + (chooseWithProbability(50) ? treeStructureParams.splitAngleVariance/100 : - treeStructureParams.splitAngleVariance/100))
+  const variancedLentgh = calculateVariancedLength(length, treeStructureParams.branchLengthVariance);
+  const variancedAngle = calculateVariancedAngle(angle, treeStructureParams.splitAngleVariance);
 
-  const nextPoint = {
-    // x: point.x + length*Math.sin(angle)*(1.0 + (chooseWithProbability(50) ? lengthVariance/100 : - lengthVariance/100)),
-    x: point.x + variancedLentgh*Math.sin(variancedAngle),
-    // y: point.y - length*Math.cos(angle)*(1.0 + (chooseWithProbability(50) ? lengthVariance/100 : - lengthVariance/100)),
-    y: point.y - variancedLentgh*Math.cos(variancedAngle),
-  }
+  const nextPoint = new Point(
+    point.x + variancedLentgh*Math.sin(variancedAngle),
+    point.y - variancedLentgh*Math.cos(variancedAngle),
+  )
 
   const branchPoints = getBranchPoints(point, nextPoint);
   if (!treeStructure[currentDeepth]) {
@@ -224,23 +217,21 @@ function branch(point, angle, length, currentDeepth, lineWidth) {
   treeStructure[currentDeepth].branches.push(branchPoints);
   treeStructure[currentDeepth].lineWidth = lineWidth;
 
-  const nextLineWidth = lineWidth <= 1 ? 1 : lineWidth - 2;
+  drawBranch(point, nextPoint, lineWidth);
 
-  ctx.strokeStyle = treeTheme.branchColor;
-  ctx.shadowBlur = treeTheme.isDrawingShadows ? treeTheme.branchShadowBlur : 0;
-  ctx.beginPath();
-  ctx.lineWidth = lineWidth;
-  ctx.moveTo(point.x, point.y);
-  ctx.lineTo(nextPoint.x, nextPoint.y);
-  ctx.closePath();
-  ctx.stroke();
-
-  if (chooseWithProbability(treeStructureParams.splitProbability)) {
-      branch(nextPoint, angle + getRadians(treeStructureParams.splitAngle), length*0.8, currentDeepth + 1, nextLineWidth);
+  const nextLineWidth = calculateNextLineWidth(lineWidth);
+  
+  const shouldDrawRightBranch = chooseWithProbability(treeStructureParams.splitProbability);
+  const shouldDrawLeftBranch = chooseWithProbability(treeStructureParams.splitProbability);
+  
+  if (shouldDrawRightBranch) {
+    const nextRigthBranchAngle = angle + getRadians(treeStructureParams.splitAngle);
+    branch(nextPoint, nextRigthBranchAngle, length*0.8, currentDeepth + 1, nextLineWidth);
   }
-
-  if (chooseWithProbability(treeStructureParams.splitProbability)) {
-    branch(nextPoint, angle - getRadians(treeStructureParams.splitAngle), length*0.8, currentDeepth + 1, nextLineWidth);
+  
+  if (shouldDrawLeftBranch) {
+    const nextLeftBranchAngle = angle - getRadians(treeStructureParams.splitAngle);
+    branch(nextPoint, nextLeftBranchAngle, length*0.8, currentDeepth + 1, nextLineWidth);
   }
 }
 
@@ -248,8 +239,9 @@ branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickne
 
 
 
-
+// Hadling tree parameter forms inputs
 const treeStructureForm = document.querySelector('form[name=tree-structure-form]');
+const treeThemeForm = document.querySelector('form[name=treeThemeForm]');
 
 function handleStructureFormInput(e) {
   treeStructureParams[e.target.name] = parseInt(e.target.value);
@@ -260,13 +252,6 @@ function handleStructureFormInput(e) {
   branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
 }
 
-treeStructureForm.addEventListener('input', throttle(handleStructureFormInput, 33));
-treeStructureForm.addEventListener('submit', e => e.preventDefault());
-
-
-
-
-const treeThemeForm = document.querySelector('form[name=treeThemeForm]');
 
 function handleThemeFormInput(e) {
   treeTheme[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -279,22 +264,17 @@ function handleThemeFormInput(e) {
   branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
 }
 
+treeStructureForm.addEventListener('input', throttle(handleStructureFormInput, 33));
 treeThemeForm.addEventListener('input', throttle(handleThemeFormInput, 50));
+
+treeStructureForm.addEventListener('submit', e => e.preventDefault());
 treeThemeForm.addEventListener('submit', e => e.preventDefault());
 
 
 
-function handleWindowResize(e) {
-  // Clear canvas of previous size - before resize
-  
-  // Update canvas dimensions to current once
-  canvasWidth = canvasContainer.offsetWidth;
-  canvasHeight = canvasContainer.offsetHeight;
-  
-  canvas.style.width = canvasWidth;
-  canvas.style.height = canvasHeight;
-  canvas.width = canvasWidth;
-  canvas.height = canvasHeight;
+
+function handleWindowResize() {
+  fitCanvasToContainer();
   
   startPoint = {
     x: parseInt(canvasContainer.offsetWidth / 2),
@@ -307,7 +287,6 @@ function handleWindowResize(e) {
   branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
 }
 
-// window.addEventListener('resize', handleWindowResize);
 window.addEventListener('resize', handleWindowResize);
 
 
@@ -317,36 +296,9 @@ window.addEventListener('resize', handleWindowResize);
 
 
 
-
-const download = () => {
-  const link = document.createElement('a');
-  link.download = 'three.jpeg';
-  link.href = canvas.toDataURL()
-  link.click();
-}
-
-const downloadButton = document.querySelector('button#download-btn');
-downloadButton.addEventListener('click', download);
-
 const growBtn = document.querySelector('button#grow-btn');
 
-let t = 1;
-let level = 0;
-
 growBtn.addEventListener('click', () => {
-
-
-  // t = 1;
-  // level = 0;
-  // arng = new alea(treeStructureParams.seed);
-  // branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
-  // ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  // ctx.shadowBlur = treeTheme.branchShadowBlur;
-
-  // window.requestAnimationFrame(animateTreeGrowth);
-
-  // const first = 200;
-  // const seccond = 400;
   const animationCanvas = document.createElement('canvas');
   animationCanvas.width = canvasWidth;
   animationCanvas.height = canvasHeight;
@@ -357,55 +309,19 @@ growBtn.addEventListener('click', () => {
   const offscreen = animationCanvas.transferControlToOffscreen();
 
   const treeGrowthAnimationWorker = new Worker('./animatedThreeGrowth.js');
+  treeGrowthAnimationWorker.postMessage({ canvas: offscreen, treeStructure, treeStructureParams, treeTheme }, [offscreen]);
   treeGrowthAnimationWorker.onmessage = function(evt) {
-    if (evt.data.dataSent) {
-      treeGrowthAnimationWorker.postMessage({ canvas: offscreen }, [offscreen]);
-    }
 
     if (evt.data.isAnimationFinished) {
       canvasContainer.removeChild(animationCanvas);
-      canvas.style.display = 'block';
       arng = new alea(treeStructureParams.seed);
-      // branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
+      branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
+      canvas.style.display = 'block';
     }
   };
-  
-  treeGrowthAnimationWorker.postMessage([treeStructure, treeStructureParams, treeTheme]);
 });
 
 
-function animateTreeGrowth() {
-  if (t == branchPartitionFactor + 1) {
-
-    if (level == treeStructureParams.deepth - 1) {
-      const leavesPoints = treeStructure[level].branches.map(branch => branch[branch.length - 1]);
-      drawManyLeaves(leavesPoints);
-    }
-    t = 1;
-    level++;
-  }
-
-  if (level == treeStructureParams.deepth) return;
-
-  ctx.lineWidth = treeStructure[level].lineWidth;
-  const branches = treeStructure[level].branches;
-  
-  for (let i = 0; i < branches.length; i++) {
-    const branchPoints = treeStructure[level].branches[i];
-
-    ctx.beginPath();
-    ctx.moveTo(branchPoints[t - 1].x, branchPoints[t - 1].y);
-    ctx.lineTo(branchPoints[t].x, branchPoints[t].y);
-    ctx.closePath();
-    ctx.stroke();
-  }
-
-  t++;
-
-  // if (level != treeStructureParams.deepth) {
-    window.requestAnimationFrame(animateTreeGrowth)
-  // }
-}
 
 
 
@@ -416,14 +332,20 @@ function animateTreeGrowth() {
 
 
 
-
-
-
-
+// UI utils - modal toggling, downloading tree picture etc.
 const infoModal = document.querySelector('#modal');
 const modalContent = document.querySelector('#modal-content');
 const toggleInfoModalBtn = document.querySelector('#toggle-info-btn');
 const closeModalBtn = document.querySelector('#close-modal-btn');
+const downloadButton = document.querySelector('button#download-btn');
+
+
+function handleTreeDownload() {
+  const link = document.createElement('a');
+  link.download = 'three.jpeg';
+  link.href = canvas.toDataURL()
+  link.click();
+}
 
 toggleInfoModalBtn.addEventListener('click', () => {
   infoModal.classList.add('open-modal');
@@ -442,3 +364,5 @@ infoModal.addEventListener('click', e => {
   e.stopPropagation();
   infoModal.classList.remove('open-modal');
 });
+
+downloadButton.addEventListener('click', handleTreeDownload);

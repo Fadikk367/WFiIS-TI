@@ -45,10 +45,10 @@
             Branching probability<br />
             <input type="range" id="branchingProbabilityInput" name="splitProbability" min="0" max="100" value="100"/>
           </label>
-          <div class="controls-row">
-            <span class="checkbox-label">Seed</span>
+          <label class="range-label">
+            Seed
             <input type="number" id="seedInput" name="seed">
-          </div>
+          </label>
         </form>
       </section>
       <section class="controls-section">
@@ -74,19 +74,12 @@
           </label>
         </form>
       </section>
-      <div id="test">
-        <button id="grow-btn">Watch it grow!</button>
-        <select name="growth-speed" id="growth-speed-select">
-          <option value="SLOW">slow</option>
-          <option value="MEDIUM">medium</option>
-          <option value="FAST">fast</option>
-        </select>
-      </div>
+      <button id="grow-btn">Watch it grow!</button>
       </form>
     </aside>
-    <section id="content">
+    <div id="content">
       <canvas></canvas>
-    </section>
+    </div>
   </main>
   <button id="download-btn">
     <img src="./assets/download.svg" alt="">

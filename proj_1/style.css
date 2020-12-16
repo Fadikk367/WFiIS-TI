@@ -43,7 +43,7 @@ aside {
   border-bottom: 2px solid grey;
 }
 
-section#content {
+#content {
   flex-grow: 1;
 }
 
@@ -103,8 +103,10 @@ canvas {
 
 #download-btn {
   /* z-index: 100; */
-  display: block;
   position: fixed;
+  display: flex;
+  justify-content: start;
+  align-items: center;
   right: 20px;
   bottom: 20px;
   width: 60px;
@@ -125,12 +127,17 @@ canvas {
 #download-btn img {
   width: 30px;
   height: 30px;
+  margin: 0 5px;
   transition: transform 0.4s ease-in;
 }
 
 #download-btn span {
-  display: none;
+  display: hidden;
   /* display: block; */
+  position: absolute;
+  left: 45px;
+  text-align: center;
+  width: 150px;
 }
 
 #download-btn:hover {
@@ -148,14 +155,17 @@ canvas {
   display: block;
 }
 
+#seedInput {
+  display: block;
+  float: right;
+  padding: 3px;
+  border-radius: 5px;
+  font-size: 1em;
+  text-align: right;
+  width: 140px;
+}
 
 
-/* <button id="grow-btn">Watch it grow!</button>
-<select name="growth-speed" id="growth-speed-select">
-  <option value="SLOW">slow</option>
-  <option value="MEDIUM">medium</option>
-  <option value="FAST">fast</option>
-</select> */
 
 #version {
   font-size: 0.5em;
@@ -163,35 +173,21 @@ canvas {
   padding-left: 10px;
 }
 
-#test {
-  display: flex;
-}
+
 
 #grow-btn {
-  padding: 5px 10px;
+  padding: 7px 10px;
   font-size: 1.1em;
-  border-bottom-left-radius: 15px;
-  border-top-left-radius: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 17px;
+  margin-top: auto;
   color: white;
   background-color: teal;
   outline: none;
   border: none;
-  flex-grow: 1;
+  cursor: pointer;
 }
-
-#growth-speed-select {
-  width: 90px;
-  padding: 5px 10px;
-  font-size: 1.1em;
-  border-bottom-right-radius: 15px;
-  border-top-right-radius: 15px;
-  outline: none;
-  border: none;
-}
-
-
-
-
 
 
 input[type=range] {
