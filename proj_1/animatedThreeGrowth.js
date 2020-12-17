@@ -6,18 +6,22 @@ let threeTheme = {};
 let branchPartitionFactor = 20;
 let ctx = null;
 
+
 onmessage = function(evt) {
+    resetGlobalParameters();
+
     treeStructure = evt.data.treeStructure;
     treeStructureParams = evt.data.treeStructureParams;
     treeTheme = evt.data.treeTheme;
-    const canvas = evt.data.canvas;
 
+    const canvas = evt.data.canvas;
     ctx = canvas.getContext('2d');
-  
     ctx.strokeStyle = treeTheme.branchColor;
-    ctx.shadowBlur = 5;
+
+    
     requestAnimationFrame(animateTreeGrowth);
 }
+
 
 function animateTreeGrowth() {
   if (t == branchPartitionFactor + 1) {
@@ -44,6 +48,16 @@ function animateTreeGrowth() {
   }
 
   t++;
-
   requestAnimationFrame(animateTreeGrowth);
+}
+
+
+function resetGlobalParameters() {
+  t = 1;
+  level = 0;
+  treeStructure = {};
+  treeStructureParams = {};
+  threeTheme = {};
+  branchPartitionFactor = 20;
+  ctx = null;
 }

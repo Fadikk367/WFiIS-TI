@@ -23,10 +23,10 @@ header {
   background-color: rgb(37, 37, 37);
 }
 
-main {
-  flex-grow: 1;
-  display: flex;
-  height: calc(100vh - 60px);
+#version {
+  font-size: 0.5em;
+  font-weight: 300;
+  padding-left: 10px;
 }
 
 aside {
@@ -37,10 +37,10 @@ aside {
   flex-direction: column;
 }
 
-.controls-section:not(:last-child) {
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid grey;
+main {
+  flex-grow: 1;
+  display: flex;
+  height: calc(100vh - 60px);
 }
 
 #content {
@@ -52,16 +52,24 @@ canvas {
   height: 100%;
 }
 
-.controls-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 
+/* Styles for forms and inputs - START */
 .form-header {
   font-weight: 300;
   font-size: 1.2em;
   padding-bottom: 7px;
+}
+
+.controls-section:not(:last-child) {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid grey;
+}
+
+.controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .cell-label {
@@ -72,11 +80,20 @@ canvas {
   gap: 5px;
   flex-direction: column;
   align-items: center;
-  /* padding: 0 10px; */
 }
 
 .cell-label:not(:last-child) {
   border-right: 1px solid grey;
+}
+
+#seedInput {
+  display: block;
+  float: right;
+  padding: 3px;
+  border-radius: 5px;
+  font-size: 1em;
+  text-align: right;
+  width: 140px;
 }
 
 .range-label {
@@ -89,6 +106,115 @@ canvas {
   margin-bottom: 7px;
 }
 
+input[type=range] {
+  -webkit-appearance: none;
+  border-radius: 5px;
+  margin: 8px 0 8px 0;
+  width: 100%;
+}
+
+input[type=range]:focus {
+  outline: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #e3e6e9;
+  border-radius: 5px;
+  border: 0.2px solid #010101;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 3px solid teal;
+  height: 22px;
+  width: 22px;
+  border-radius: 50%;
+  background: #f3efef;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -7px;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #367ebd;
+}
+
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  background: #3071a9;
+  border-radius: 5px;
+  border: 0.2px solid #010101;
+}
+
+input[type=range]::-moz-range-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  border-color: transparent;
+  border-radius: 5px;
+  border-width: 16px 0;
+}
+
+input[type=range]::-ms-fill-lower {
+  background: #2a6495;
+  border: 0.2px solid #010101;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+
+input[type=range]::-ms-fill-upper {
+  background: #3071a9;
+  border: 0.2px solid #010101;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+
+input[type=range]::-ms-thumb {
+  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+  border: 1px solid #000000;
+  height: 36px;
+  width: 16px;
+  border-radius: 5px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+input[type=range]:focus::-ms-fill-lower {
+  background: #3071a9;
+}
+
+input[type=range]:focus::-ms-fill-upper {
+  background: #367ebd;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+	border: none;
+}
+/* Styles for forms and inputs - END */
+
+
+/* UI Buttons - START */
 #toggle-info-btn {
   width: 30px;
   height: 30px;
@@ -102,7 +228,6 @@ canvas {
 }
 
 #download-btn {
-  /* z-index: 100; */
   position: fixed;
   display: flex;
   justify-content: start;
@@ -132,8 +257,6 @@ canvas {
 }
 
 #download-btn span {
-  display: hidden;
-  /* display: block; */
   position: absolute;
   left: 45px;
   text-align: center;
@@ -145,8 +268,8 @@ canvas {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* padding: 0 20px; */
 }
+
 #download-btn:hover img {
   transform: rotate(-360deg);
 }
@@ -154,26 +277,6 @@ canvas {
 #download-btn:hover span {
   display: block;
 }
-
-#seedInput {
-  display: block;
-  float: right;
-  padding: 3px;
-  border-radius: 5px;
-  font-size: 1em;
-  text-align: right;
-  width: 140px;
-}
-
-
-
-#version {
-  font-size: 0.5em;
-  font-weight: 300;
-  padding-left: 10px;
-}
-
-
 
 #grow-btn {
   padding: 7px 10px;
@@ -189,113 +292,16 @@ canvas {
   cursor: pointer;
 }
 
+.disabled {
+  cursor: default !important;
+  opacity: 0.5;
+}
 
-input[type=range] {
-  -webkit-appearance: none;
-  border-radius: 5px;
-  margin: 8px 0 8px 0;
-  width: 100%;
-}
-input[type=range]:focus {
-  outline: none;
-}
-input[type=range]::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 10px;
-  cursor: pointer;
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  background: #e3e6e9;
-  border-radius: 5px;
-  border: 0.2px solid #010101;
-}
-input[type=range]::-webkit-slider-thumb {
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  border: 3px solid teal;
-  height: 22px;
-  width: 22px;
-  border-radius: 50%;
-  background: #f3efef;
-  cursor: pointer;
-  -webkit-appearance: none;
-  margin-top: -7px;
-}
-input[type=range]:focus::-webkit-slider-runnable-track {
-  background: #367ebd;
-}
-input[type=range]::-moz-range-track {
-  width: 100%;
-  height: 10px;
-  cursor: pointer;
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  background: #3071a9;
-  border-radius: 5px;
-  border: 0.2px solid #010101;
-}
-input[type=range]::-moz-range-thumb {
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  border: 1px solid #000000;
-  height: 36px;
-  width: 16px;
-  border-radius: 50%;
-  background: #ffffff;
-  cursor: pointer;
-}
-input[type=range]::-ms-track {
-  width: 100%;
-  height: 10px;
-  cursor: pointer;
-  background: transparent;
-  border-color: transparent;
-  border-radius: 5px;
-  border-width: 16px 0;
-  color: transparent;
-}
-input[type=range]::-ms-fill-lower {
-  background: #2a6495;
-  border: 0.2px solid #010101;
-  border-radius: 5px;
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-}
-input[type=range]::-ms-fill-upper {
-  background: #3071a9;
-  border: 0.2px solid #010101;
-  border-radius: 5px;
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-}
-input[type=range]::-ms-thumb {
-  box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-  border: 1px solid #000000;
-  height: 36px;
-  width: 16px;
-  border-radius: 5px;
-  background: #ffffff;
-  cursor: pointer;
-}
-input[type=range]:focus::-ms-fill-lower {
-  background: #3071a9;
-}
-input[type=range]:focus::-ms-fill-upper {
-  background: #367ebd;
-}
+/* UI Buttons - END*/
 
 
 
-input[type="color"]::-webkit-color-swatch-wrapper {
-	padding: 0;
-}
-input[type="color"]::-webkit-color-swatch {
-	border: none;
-}
-
-
-
-
-
-
-
-
-
-
+/* Modal - START */
 
 @keyframes slideIn {
   0% {
@@ -316,8 +322,6 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 
-
-
 #modal {
   width: 100vw;
   height: 100vh;
@@ -335,15 +339,45 @@ input[type="color"]::-webkit-color-swatch {
 #modal-content {
   width: 1024px;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  /* display: flex; */
+  /* flex-direction: column; */
   position: relative;
   overflow-y: scroll;
   /* left: 50%;
   transform: translate(-50%); */
   padding: 40px;
   background-color: #535353;
+  
+  font-weight: 300;
   /* animation: showUp 0.3s ease-in-out; */
+}
+
+#modal figure {
+  margin: 10px 0 20px 0;
+}
+
+
+#modal figcaption {
+  padding: 5px 5px 5px 10px;
+}
+
+#modal img {
+  display: block;
+  width: 100%;
+  /* height: 100%; */
+}
+
+#modal h2 {
+  margin: 30px 0 20px 0;
+  padding: 10px 20px;
+  font-size: 1.8em;
+  font-weight: 500;
+  border-bottom: 2px solid grey;
+}
+
+#modal p {
+  font-size: 1.2em;
+  padding: 10px 0;
 }
 
 .open-modal {
@@ -366,3 +400,5 @@ input[type="color"]::-webkit-color-swatch {
   width: 40px;
   height: 40px;
 }
+
+/* Modal - END */
