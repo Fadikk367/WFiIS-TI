@@ -61,7 +61,8 @@ const treeGrowthAnimationWorker = new Worker('./animatedThreeGrowth.js');
 // Seeded pseudo-random generator
 let arng = new alea(treeStructureParams.seed);
 
-// Throttle function coppied from lodash library - I only needed this one so it would be pointles to include or download whole lib
+// Throttle function coppied from lodash library - I only needed this one so it would be pointless to include or download whole lib
+// src: https://lodash.com/docs/4.17.15#throttle
 function throttle(func, wait, options) {
   var context, args, result;
   var timeout = null;
@@ -96,9 +97,9 @@ function throttle(func, wait, options) {
 
 
 
-// Splits branch into branchPartitionFactor + 1 points in order to proceed tree growth animation
 let branchPartitionFactor = 20;
 
+// Splits branch into branchPartitionFactor + 1 points in order to proceed tree growth animation
 function getBranchPoints(begin, end) {
   const branchPoints = [];
   const dx = end.x - begin.x;
@@ -252,6 +253,7 @@ function branch(point, angle, length, currentDeepth, lineWidth) {
   }
 }
 
+// First call to see default tree immediatly after visiting page
 branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
 
 
@@ -272,11 +274,14 @@ function handleStructureFormInput(e) {
 
 
 function handleThemeFormInput(e) {
+  // Determining if event came from checkbox or input to read a value in a proper way
   treeTheme[e.target.name] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
 
+  // Reseting tree parameters if performance sensitive parameter has been changed
   if (e.target.name === "rootThickness" || e.target.name === "branchColor") {
     resetTreeParams();
   }
+
   arng = new alea(treeStructureParams.seed);
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
@@ -310,12 +315,12 @@ window.addEventListener('resize', handleWindowResize);
 
 
 
-
-
-
 const treeAnimationButton = document.querySelector('button#grow-btn');
 
 treeAnimationButton.addEventListener('click', () => {
+  treeAnimationButton.disabled = true;
+  treeAnimationButton.classList.toggle('disabled');
+
   const animationCanvas = document.createElement('canvas');
   animationCanvas.width = canvasWidth;
   animationCanvas.height = canvasHeight;
@@ -324,9 +329,6 @@ treeAnimationButton.addEventListener('click', () => {
   canvas.style.display = 'none';
   canvasContainer.appendChild(animationCanvas);
   const offscreen = animationCanvas.transferControlToOffscreen();
-
-  treeAnimationButton.disabled = true;
-  treeAnimationButton.classList.toggle('disabled');
 
   treeGrowthAnimationWorker.postMessage({ canvas: offscreen, treeStructure, treeStructureParams, treeTheme }, [offscreen]);
 
@@ -341,8 +343,6 @@ treeAnimationButton.addEventListener('click', () => {
     }
   };
 });
-
-
 
 
 
