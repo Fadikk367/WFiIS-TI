@@ -86,7 +86,7 @@ canvas {
   border-right: 1px solid grey;
 }
 
-#seedInput {
+input[name="seed"] {
   display: block;
   float: right;
   padding: 3px;
@@ -280,6 +280,7 @@ input[type="color"]::-webkit-color-swatch {
 
 #grow-btn {
   padding: 7px 10px;
+  margin-bottom: 10px;
   font-size: 1.1em;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -399,6 +400,16 @@ input[type="color"]::-webkit-color-swatch {
   padding: 5px;
   width: 40px;
   height: 40px;
+}
+
+#sources {
+  list-style-type: none;
+}
+
+#sources li a {
+  font-size: 1.2em;
+  color:rgb(238, 225, 225);
+  padding: 5px;
 }
 
 /* Modal - END */

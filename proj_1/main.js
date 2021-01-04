@@ -4,7 +4,7 @@ const seedInput = document.querySelector('input#seedInput');
 
 const splitAngleInput = document.querySelector('input[name=splitAngle]');
 const branchLengthInput = document.querySelector('input[name=branchLength]');
-const currentDeepthInput = document.querySelector('input[name=currentDeepth]');
+const currentDeepthInput = document.querySelector('input[name=deepth]');
 const splitAngleVarianceInput = document.querySelector('input[name=splitAngleVariance]');
 const branchLengthVarianceInput = document.querySelector('input[name=branchLengthVariance]');
 const splitProbabilityInput = document.querySelector('input[name=splitProbability]');
@@ -14,6 +14,7 @@ const drawShadowsCheckbox = document.querySelector('input#drawShadows');
 const branchColorInput = document.querySelector('input#branchColor');
 const rootThicknessInput = document.querySelector('input[name=rootThickness]');
 
+
 class Point {
   constructor(x, y) {
     this.x = x;
@@ -21,8 +22,14 @@ class Point {
   }
 }
 
+
+
+
+// ========================== Global state objects and variables ============================ //
+// ========================================================================================== //
+
 const defaultRootThickness = rootThicknessInput.value;
-const defaultShadowColor = "rgba(0,0,0,0.8)";
+const defaultShadowColor = "#423b3b";
 const defaultBranchColor = branchColorInput.value;
 const defaultLeafColor = "green";
 const defaultBranchShadowBlur = 3;
@@ -33,7 +40,7 @@ const defaultSeed = 0;
 const treeStructureParams = {
   splitAngle: splitAngleInput.value,
   branchLength: branchLengthInput.value,
-  deepth: deepthInput.value,
+  deepth: currentDeepthInput.value,
   splitAngleVariance: splitAngleVarianceInput.value,
   branchLengthVariance: branchLengthVarianceInput.value,
   splitProbability: splitProbabilityInput.value,
@@ -54,14 +61,21 @@ const treeTheme = {
 
 // Structure holding levels of tree which holds lineWidth and array or branches divided on points
 let treeStructure = {};
+// Point from which tree will start growing
+let startPoint = {};
 
 const ctx = canvas.getContext('2d');
+ctx.shadowColor = defaultShadowColor;
+fitCanvasToContainer();
+
 const treeGrowthAnimationWorker = new Worker('./animatedThreeGrowth.js');
 
 // Seeded pseudo-random generator
 let arng = new alea(treeStructureParams.seed);
 
+
 // Throttle function coppied from lodash library - I only needed this one so it would be pointless to include or download whole lib
+// Function is unspoilt - I left ugly "var" syntax which was present in lodash source code
 // src: https://lodash.com/docs/4.17.15#throttle
 function throttle(func, wait, options) {
   var context, args, result;
@@ -97,115 +111,31 @@ function throttle(func, wait, options) {
 
 
 
-let branchPartitionFactor = 20;
 
-// Splits branch into branchPartitionFactor + 1 points in order to proceed tree growth animation
-function getBranchPoints(begin, end) {
-  const branchPoints = [];
-  const dx = end.x - begin.x;
-  const dy = end.y - begin.y;
-
-  for (let i = 0; i < branchPartitionFactor; i++) {
-    const x = begin.x + i*dx/branchPartitionFactor;
-    const y = begin.y + i*dy/branchPartitionFactor;
-
-    branchPoints.push(new Point(x, y));
-  }
-  branchPoints.push(new Point(end.x, end.y));
-
-  return branchPoints;
-}
-
+// ============================== Few short lambda functions ================================ //
+// ========================================================================================== //
 
 const chooseWithProbability = probability => (probability >= arng()*100);
-
-let canvasHeight = canvas.offsetHeight;
-let canvasWidth = canvas.offsetWidth;
-
-canvas.height = canvasHeight;
-canvas.width = canvasWidth;
-
-let startPoint = {
-  x: parseInt(canvasWidth / 2),
-  y: canvasHeight - 50,
-}
-
-
-function fitCanvasToContainer() {
-  canvasWidth = canvasContainer.offsetWidth;
-  canvasHeight = canvasContainer.offsetHeight;
-  
-  canvas.style.width = canvasWidth;
-  canvas.style.height = canvasHeight;
-
-  canvas.width = canvasWidth;
-  canvas.height = canvasHeight;
-}
-
-
-function getRadians(degrees) {
-  return degrees * Math.PI / 180;
-}
-
-
-ctx.shadowColor = "rgba(0,0,0,0.8)";
-
-
-function resetTreeParams() {
-  drawLeavesCheckbox.checked = false;
-  drawShadowsCheckbox.checked = false;
-  treeStructure = {};
-  treeTheme.isDrawingLeaves = false;
-  treeTheme.isDrawingShadows = false;
-}
-
-
-function drawSingleLeave(point) {
-  ctx.save();
-
-  ctx.shadowBlur = treeTheme.isDrawingShadows ? treeTheme.leafShadowBlur : 0;
-  ctx.fillStyle = treeTheme.leafColor
-  ctx.beginPath();
-  ctx.arc(point.x - 7, point.y - 7, 7, Math.PI/4, Math.PI);
-  ctx.fill();
-
-  ctx.restore();
-}
-
-
-function drawManyLeaves(points) {
-  points.map(drawSingleLeave);
-}
-
 
 const calculateVariancedLength = (length, branchLengthVariance) => (
   length * (1.0 + branchLengthVariance/100 * (chooseWithProbability(50) ? 1 : -1))
 );
 
-
 const calculateVariancedAngle = (angle, splitAngleVariance) => (
   angle * (1.0 + splitAngleVariance/100 * (chooseWithProbability(50) ? 1 : -1))
 );
 
-
 const calculateNextLineWidth = lineWidth => lineWidth <= 1 ? 1 : lineWidth - 2;
-
 
 const isBranchFinished = currentDeepth => currentDeepth >= treeStructureParams.deepth;
 
+const getRadians = degrees => degrees * Math.PI / 180;
 
-function drawBranch(startPoint, endPoint, lineWidth) {
-  ctx.strokeStyle = treeTheme.branchColor;
-  ctx.shadowBlur = treeTheme.isDrawingShadows ? treeTheme.branchShadowBlur : 0;
-  ctx.lineWidth = lineWidth;
 
-  ctx.beginPath();
-  ctx.moveTo(startPoint.x, startPoint.y);
-  ctx.lineTo(endPoint.x, endPoint.y);
-  ctx.closePath();
-  ctx.stroke();
-}
 
+
+// ================================ Bigger, core functions ================================== //
+// ========================================================================================== //
 
 // Core function in the app - this one is called recursively to draw a tree
 function branch(point, angle, length, currentDeepth, lineWidth) {
@@ -253,14 +183,112 @@ function branch(point, angle, length, currentDeepth, lineWidth) {
   }
 }
 
+
+// Drawing single branch from point to pint with given lineWidth
+function drawBranch(startPoint, endPoint, lineWidth) {
+  ctx.save();
+  ctx.shadowColor = defaultShadowColor;
+  ctx.strokeStyle = treeTheme.branchColor;
+  ctx.shadowBlur = treeTheme.isDrawingShadows ? treeTheme.branchShadowBlur : 0;
+  ctx.lineWidth = lineWidth;
+
+  ctx.beginPath();
+  ctx.moveTo(startPoint.x, startPoint.y);
+  ctx.lineTo(endPoint.x, endPoint.y);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.restore();
+}
+
+
+// Splits branch into branchPartitionFactor + 1 points in order to proceed tree growth animation
+function getBranchPoints(begin, end) {
+  const branchPartitionFactor = 20;
+
+  const branchPoints = [];
+  const dx = end.x - begin.x;
+  const dy = end.y - begin.y;
+
+  for (let i = 0; i < branchPartitionFactor; i++) {
+    const x = begin.x + i*dx/branchPartitionFactor;
+    const y = begin.y + i*dy/branchPartitionFactor;
+
+    branchPoints.push(new Point(x, y));
+  }
+  branchPoints.push(new Point(end.x, end.y));
+
+  return branchPoints;
+}
+
+
+function fitCanvasToContainer() {
+  canvasWidth = canvasContainer.offsetWidth;
+  canvasHeight = canvasContainer.offsetHeight;
+  
+  canvas.style.width = canvasWidth;
+  canvas.style.height = canvasHeight;
+
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
+
+  startPoint = {
+    x: parseInt(canvasWidth / 2),
+    y: canvasHeight - 50,
+  };
+}
+
+
+function resetTreeParams() {
+  drawLeavesCheckbox.checked = false;
+  drawShadowsCheckbox.checked = false;
+  treeStructure = {};
+  treeTheme.isDrawingLeaves = false;
+  treeTheme.isDrawingShadows = false;
+}
+
+
+function drawSingleLeave(point) {
+  ctx.save();
+
+  ctx.shadowColor = defaultShadowColor;
+  ctx.shadowBlur = treeTheme.isDrawingShadows ? treeTheme.leafShadowBlur : 0;
+  ctx.fillStyle = treeTheme.leafColor
+  ctx.beginPath();
+  ctx.arc(point.x - 7, point.y - 7, 7, Math.PI/4, Math.PI);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+
+function drawManyLeaves(points) {
+  points.map(drawSingleLeave);
+}
+
+
+function handleWindowResize() {
+  fitCanvasToContainer();
+  
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+  resetTreeParams();
+  arng = new alea(treeStructureParams.seed);
+  branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
+}
+
+
+window.addEventListener('resize', handleWindowResize);
 // First call to see default tree immediatly after visiting page
 branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
 
 
 
-// Hadling tree parameter forms inputs
+
+// ================ Hadling tree parameter form inputs and grow button click ================ //
+// ========================================================================================== //
+
 const treeStructureForm = document.querySelector('form[name=tree-structure-form]');
 const treeThemeForm = document.querySelector('form[name=treeThemeForm]');
+const treeAnimationButton = document.getElementById('grow-btn');
 
 
 function handleStructureFormInput(e) {
@@ -288,37 +316,26 @@ function handleThemeFormInput(e) {
 }
 
 
-treeStructureForm.addEventListener('input', throttle(handleStructureFormInput, 33));
-treeThemeForm.addEventListener('input', throttle(handleThemeFormInput, 50));
-
-treeStructureForm.addEventListener('submit', e => e.preventDefault());
-treeThemeForm.addEventListener('submit', e => e.preventDefault());
-
-
-function handleWindowResize() {
-  fitCanvasToContainer();
-  
-  startPoint = {
-    x: parseInt(canvasContainer.offsetWidth / 2),
-    y: canvasContainer.offsetHeight - 50,
-  };
-  
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  resetTreeParams();
-  arng = new alea(treeStructureParams.seed);
-  branch(startPoint, 0, treeStructureParams.branchLength, 0, treeTheme.rootThickness);
+function disableAllInputs() {
+  for (let form of document.forms) {
+    for (let input of form.elements) {
+      input.disabled = true;
+    }
+  }
 }
 
-window.addEventListener('resize', handleWindowResize);
+function enableAllInputs() {
+  for (let form of document.forms) {
+    for (let input of form.elements) {
+      input.disabled = false;
+    }
+  }
+}
 
 
-
-
-
-const treeAnimationButton = document.querySelector('button#grow-btn');
-
-treeAnimationButton.addEventListener('click', () => {
+function handleTreeGrowBtnClick() {
   treeAnimationButton.disabled = true;
+  disableAllInputs()
   treeAnimationButton.classList.toggle('disabled');
 
   const animationCanvas = document.createElement('canvas');
@@ -340,14 +357,24 @@ treeAnimationButton.addEventListener('click', () => {
       canvas.style.display = 'block';
       treeAnimationButton.disabled = false;
       treeAnimationButton.classList.toggle('disabled');
+      enableAllInputs()
     }
   };
-});
+}
+
+
+treeStructureForm.addEventListener('input', throttle(handleStructureFormInput, 33));
+treeThemeForm.addEventListener('input', throttle(handleThemeFormInput, 50));
+treeStructureForm.addEventListener('submit', e => e.preventDefault());
+treeThemeForm.addEventListener('submit', e => e.preventDefault());
+treeAnimationButton.addEventListener('click', handleTreeGrowBtnClick);
 
 
 
 
-// UI utils - modal toggling, downloading tree picture etc.
+// ================ UI utils - modal toggling, downloading tree picture etc. ================ //
+// ========================================================================================== //
+
 const infoModal = document.querySelector('#modal');
 const modalContent = document.querySelector('#modal-content');
 const toggleInfoModalBtn = document.querySelector('#toggle-info-btn');

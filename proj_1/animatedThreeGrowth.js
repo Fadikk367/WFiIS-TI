@@ -8,18 +8,18 @@ let ctx = null;
 
 
 onmessage = function(evt) {
-    resetGlobalParameters();
+  resetGlobalParameters();
 
-    treeStructure = evt.data.treeStructure;
-    treeStructureParams = evt.data.treeStructureParams;
-    treeTheme = evt.data.treeTheme;
+  treeStructure = evt.data.treeStructure;
+  treeStructureParams = evt.data.treeStructureParams;
+  treeTheme = evt.data.treeTheme;
 
-    const canvas = evt.data.canvas;
-    ctx = canvas.getContext('2d');
-    ctx.strokeStyle = treeTheme.branchColor;
+  const canvas = evt.data.canvas;
+  ctx = canvas.getContext('2d');
+  ctx.strokeStyle = treeTheme.branchColor;
 
     
-    requestAnimationFrame(animateTreeGrowth);
+  requestAnimationFrame(animateTreeGrowth);
 }
 
 
